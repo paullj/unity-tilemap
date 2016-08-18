@@ -12,4 +12,4 @@ If you want to create your own scriptable tiles (Like the **Tile** or **AutoTile
 A **Stencil** (or in other words a brush) is a script that controls the way tiles are painted on the tilemap.
 
 ### How do I make custom stencils?
-If you want to create your own stencils (Like the **Brush** or **Pencil**) then click on _Create > Tilemap > Create C# Stencil Script_ and edit like anyother script. Alternatively create a C# class that inherits **Stencil**. Any class that inherits **Stencil** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.
+If you want to create your own stencils (Like the **Brush** or **Eyedropper**) then click on _Create > Tilemap > Create C# Stencil Script_ and edit like anyother script. Alternatively create a C# class that inherits **Stencil**. Any class that inherits **Stencil** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.
