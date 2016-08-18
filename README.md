@@ -8,7 +8,7 @@ In the project window click on _Create > Tilemap > Tiles_ and select a scriptabl
 
 If you want to create your own scriptable tiles (Like the **Tile** or **AutoTile**) then click on _Create > Tilemap > Create C# Tile Script_ and edit like anyother script. Alternatively create a C# class that inherits **ScriptableTile**
 
-### What is a stencil ?
+### What is a ScriptableBrush ?
 A **Stencil** (or in other words a brush) is a script that controls the way tiles are painted on the tilemap.
 
 ### How do I make custom stencils?
