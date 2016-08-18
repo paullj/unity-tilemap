@@ -3,7 +3,8 @@ using System;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	public class Pencil : ScriptableBrush
+	[Serializable]
+	public class Pencil : ScriptableTool
 	{
 		public Pencil () : base ()
 		{
@@ -12,7 +13,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public override KeyCode ShortcutKeyCode { get { return KeyCode.P; } }
 		public override string Description { get { return "The simplest brush"; } }
 
-		public override bool Paint (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
 		{
 			if (tile == null && map == null)
 				return false;

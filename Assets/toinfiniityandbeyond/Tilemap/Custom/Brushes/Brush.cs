@@ -6,7 +6,7 @@ using System;
 namespace toinfiniityandbeyond.Tilemapping
 {
 	[Serializable]
-	public class Brush : ScriptableBrush
+	public class Brush : ScriptableTool
 	{
 		/// <summary>
 		/// The default constructor where you can set up default variable values
@@ -30,15 +30,17 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <param name="point">Where you want to paint the tile</param>
 		/// <param name="tile">The BaseTile you want to paint</param>
 		/// <param name="map">What you want to paint on</param>
-		public override bool Paint (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
 		{
 			if (tile == null && map == null)
 				return false;
 
+			int correctedRadius = radius - 1;
+
 			bool result = false;
-			for (int x = -radius; x <= radius; x++)
+			for (int x = -correctedRadius; x <= correctedRadius; x++)
 			{
-				for (int y = -radius; y <= radius; y++)
+				for (int y = -correctedRadius; y <= correctedRadius; y++)
 				{
 					Coordinate offsetPoint = point + new Coordinate (x, y);
 			

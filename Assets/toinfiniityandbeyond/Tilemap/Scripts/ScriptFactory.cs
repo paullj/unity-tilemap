@@ -3,10 +3,10 @@ using System.IO;
 
 public class ScriptFactory
 {
-	[MenuItem ("Assets/Create/Tilemap/New C# Brush Script")]
-	private static void CreatScriptableBrushScript ()
+	[MenuItem ("Assets/Create/Tilemap/New C# Tool Script")]
+	private static void CreatScriptableToolScript ()
 	{
-		string name = "NewScriptableBrush";
+		string name = "NewScriptableTool";
 		string filename = name + ".cs";
 
 		string path;
@@ -35,19 +35,19 @@ public class ScriptFactory
 				outfile.WriteLine ("	");
 				outfile.WriteLine ("	");
 
-				outfile.WriteLine ("	public class " + name + " : ScriptableBrush");
+				outfile.WriteLine ("	public class " + name + " : ScriptableTool");
 				outfile.WriteLine ("	{");
 				outfile.WriteLine ("		public "+name+"() : base()");
 				outfile.WriteLine ("		{");
 				outfile.WriteLine ("			//You can set any default variables here");
 				outfile.WriteLine ("		}");
-				outfile.WriteLine ("		//If you want this ScriptableBrush to have a shortcut set it here");
+				outfile.WriteLine ("		//If you want this ScriptableTool to have a shortcut set it here");
 				outfile.WriteLine ("		public override KeyCode ShortcutKeyCode { get { return KeyCode.None; } }");
-				outfile.WriteLine ("		//If you want this ScriptableBrush to have a description set it here");
+				outfile.WriteLine ("		//If you want this ScriptableTool to have a description set it here");
 				outfile.WriteLine ("		public override string Description { get { return string.Empty; } }");
 				outfile.WriteLine ("	 ");
 				outfile.WriteLine ("		//Called when you left click on a tile map when in edit mode");
-				outfile.WriteLine ("		public override void Paint (Coordinate point, Tile tile, TileMap map)");
+				outfile.WriteLine ("		public override void Use (Coordinate point, Tile tile, TileMap map)");
 				outfile.WriteLine ("		{");
 				outfile.WriteLine ("			if (tile == null && map == null)");
 				outfile.WriteLine ("				return false;");

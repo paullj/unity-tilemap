@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
@@ -19,15 +20,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public Action<int, int> OnTileChanged = (x, y) => { };
 		public Action<int, int> OnTilemapRebuild = (width, height) => { };
-
-		/*public bool Initialised
-		{
-			get
-			{
-				return (width * height == map.Length);
-			}
-		}
-		*/
 
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
@@ -132,5 +124,24 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 			return false;
 		}
+
+#if UNITY_EDITOR
+		public Rect toolbarWindowPosition;
+		public Rect tilePickerWindowPosition;
+		public Vector2 tilePickerScrollView;
+
+		public int selectedScriptableTool = -1;
+		public int lastSelectedScriptableTool = -1;
+
+		public bool primaryTilePickerToggle = false;
+		public bool secondaryTilePickerToggle = false;
+
+		public List<ScriptableTool> scriptableToolCache = new List<ScriptableTool> ();
+		public List<ScriptableTile> scriptableTileCache = new List<ScriptableTile> ();
+
+		public Vector3 position;
+		public Quaternion rotation;
+
+#endif
 	}
 }

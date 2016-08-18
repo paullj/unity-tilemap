@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+using System;
+using System.Reflection;
+
 namespace toinfiniityandbeyond.Utility
 {
 	public static class CustomGUILayout
@@ -37,7 +40,9 @@ namespace toinfiniityandbeyond.Utility
 		{
 			Splitter (thickness, CustomStyles.splitter);
 		}
+		
 	}
+
 	public static class CustomGUI { 
 		private static readonly Color splitterColor = EditorGUIUtility.isProSkin ? new Color (0.157f, 0.157f, 0.157f) : new Color (0.5f, 0.5f, 0.5f);
 		// GUI Style
@@ -51,16 +56,17 @@ namespace toinfiniityandbeyond.Utility
 				UnityEngine.GUI.color = restoreColor;
 			}
 		}
-
+	
 	}
 
 	public static class CustomStyles
 	{
 		public static readonly GUIStyle splitter;
-		public static readonly GUIStyle centeredMiniLabel;
-		public static readonly GUIStyle centeredBoldLabel;
-		public static readonly GUIStyle centeredWhiteBoldLabel;
-		public static readonly GUIStyle centeredWhiteMiniLabel;
+		public static readonly GUIStyle centerMiniLabel;
+		public static readonly GUIStyle leftBoldLabel;
+		public static readonly GUIStyle centerBoldLabel;
+		public static readonly GUIStyle centerWhiteBoldLabel;
+		public static readonly GUIStyle centerWhiteMiniLabel;
 
 		static CustomStyles ()
 		{
@@ -69,21 +75,25 @@ namespace toinfiniityandbeyond.Utility
 			splitter.stretchWidth = true;
 			splitter.margin = new RectOffset (0, 0, 7, 7);
 
-			centeredWhiteBoldLabel = new GUIStyle (EditorStyles.whiteBoldLabel);
-			centeredWhiteBoldLabel.alignment = TextAnchor.MiddleCenter;
-			centeredWhiteBoldLabel.wordWrap = true;
+			centerWhiteBoldLabel = new GUIStyle (EditorStyles.whiteBoldLabel);
+			centerWhiteBoldLabel.alignment = TextAnchor.MiddleCenter;
+			centerWhiteBoldLabel.wordWrap = true;
 
-			centeredWhiteMiniLabel = new GUIStyle (EditorStyles.whiteMiniLabel);
-			centeredWhiteMiniLabel.alignment = TextAnchor.MiddleCenter;
-			centeredWhiteMiniLabel.wordWrap = true;
+			centerWhiteMiniLabel = new GUIStyle (EditorStyles.whiteMiniLabel);
+			centerWhiteMiniLabel.alignment = TextAnchor.MiddleCenter;
+			centerWhiteMiniLabel.wordWrap = true;
 
-			centeredBoldLabel = new GUIStyle (EditorStyles.boldLabel);
-			centeredBoldLabel.alignment = TextAnchor.MiddleCenter;
-			centeredBoldLabel.wordWrap = true;
+			leftBoldLabel = new GUIStyle (EditorStyles.boldLabel);
+			leftBoldLabel.alignment = TextAnchor.MiddleLeft;
+			leftBoldLabel.wordWrap = true;
 
-			centeredMiniLabel = new GUIStyle (EditorStyles.miniLabel);
-			centeredMiniLabel.alignment = TextAnchor.MiddleCenter;
-			centeredMiniLabel.wordWrap = true;
+			centerBoldLabel = new GUIStyle (EditorStyles.boldLabel);
+			centerBoldLabel.alignment = TextAnchor.MiddleCenter;
+			centerBoldLabel.wordWrap = true;
+
+			centerMiniLabel = new GUIStyle (EditorStyles.miniLabel);
+			centerMiniLabel.alignment = TextAnchor.MiddleCenter;
+			centerMiniLabel.wordWrap = true;
 		}
 	}
 }

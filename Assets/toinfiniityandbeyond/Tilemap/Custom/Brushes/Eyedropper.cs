@@ -6,7 +6,7 @@ using System;
 namespace toinfiniityandbeyond.Tilemapping
 {
 	[Serializable]
-	public class Eyedropper : ScriptableBrush
+	public class Eyedropper : ScriptableTool
 	{
 		public Eyedropper () : base ()
 		{
@@ -15,7 +15,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public override KeyCode ShortcutKeyCode { get { return KeyCode.I; } }
 		public override string Description { get { return "Sets the primary tile to whatever you click"; } }
 
-		public override bool Paint (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
 		{
 			map.primaryTile = map.GetTileAt (point);
 			return true;

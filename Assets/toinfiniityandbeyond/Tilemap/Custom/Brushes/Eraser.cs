@@ -6,35 +6,17 @@ using System;
 namespace toinfiniityandbeyond.Tilemapping
 {
 	[Serializable]
-	public class Eraser : ScriptableBrush
+	public class Eraser : Brush
 	{
-		public int radius;
-
 		public Eraser () : base ()
 		{
-			radius = 1;
 		}
 		public override KeyCode ShortcutKeyCode { get { return KeyCode.E; } }
 		public override string Description { get { return "Sets the painted tile to nothing"; } }
 
-		public override bool Paint (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
 		{
-			if (map == null)
-				return false;
-
-			bool result = false;
-			for (int x = -radius; x <= radius; x++)
-			{
-				for (int y = -radius; y <= radius; y++)
-				{
-					Coordinate offsetPoint = point + new Coordinate (x, y);
-					if (map.SetTileAt (offsetPoint, null))
-					{
-						result = true;
-					}
-				}
-			}
-			return result;
+			return base.Use (point, null, map);
 		}
 	}
 }

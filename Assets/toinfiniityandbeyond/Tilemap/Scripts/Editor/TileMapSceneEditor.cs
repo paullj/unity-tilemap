@@ -14,21 +14,9 @@ namespace toinfiniityandbeyond.Tilemapping
 {
 	partial class TileMapEditor : Editor
 	{
-		private TransformData transformData;
-		private Rect toolbarWindowPosition;
-		private Rect tilePickerWindowPosition;
-		private Vector2 tilePickerScrollView;
-
-		private int selectedScriptableBrush = 0;
-		private bool primaryTilePickerToggle = false;
-		private bool secondaryTilePickerToggle = false;
-
-		private List<ScriptableBrush> scriptableBrushCache = new List<ScriptableBrush> ();
-		private List<ScriptableTile> scriptableTileCache = new List<ScriptableTile> ();
-
 		partial void OnSceneEnable ()
 		{
-			RefreshScriptableBrushCache ();
+			RefreshScriptableToolCache ();
 			RefreshScriptableTileCache ();
 		}
 		partial void OnSceneDisable ()
@@ -40,26 +28,26 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			if (IsInEditMode)
 			{
-				toolbarWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), toolbarWindowPosition, ToolbarWindow, new GUIContent ("Toolbar"), GUILayout.Width (80)));
+				tileMap.toolbarWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tileMap.toolbarWindowPosition, ToolbarWindow, new GUIContent ("Toolbar"), GUILayout.Width (80)));
 
-				if (primaryTilePickerToggle)
+				if (tileMap.primaryTilePickerToggle)
 				{
-					if (secondaryTilePickerToggle)
-						primaryTilePickerToggle = false;
+					if (tileMap.secondaryTilePickerToggle)
+						tileMap.primaryTilePickerToggle = false;
 
-					tilePickerWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tilePickerWindowPosition, (int id) => { TilepickerWindow (id, ref tileMap.primaryTile); }, new GUIContent ("Pick primary tile..."), GUILayout.Width (100)));
+					tileMap.tilePickerWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tileMap.tilePickerWindowPosition, (int id) => { TilepickerWindow (id, ref tileMap.primaryTile); }, new GUIContent ("Pick primary tile..."), GUILayout.Width (100)));
 				}
-				else if (secondaryTilePickerToggle)
+				else if (tileMap.secondaryTilePickerToggle)
 				{
-					if (primaryTilePickerToggle)
-						secondaryTilePickerToggle = false;
+					if (tileMap.primaryTilePickerToggle)
+						tileMap.secondaryTilePickerToggle = false;
 
-					tilePickerWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tilePickerWindowPosition, (int id) => { TilepickerWindow (id, ref tileMap.secondaryTile); }, new GUIContent ("Pick secondary tile..."), GUILayout.Width (100)));
+					tileMap.tilePickerWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tileMap.tilePickerWindowPosition, (int id) => { TilepickerWindow (id, ref tileMap.secondaryTile); }, new GUIContent ("Pick secondary tile..."), GUILayout.Width (100)));
 				}
-				if (!secondaryTilePickerToggle && !primaryTilePickerToggle)
+				if (!tileMap.secondaryTilePickerToggle && !tileMap.primaryTilePickerToggle)
 				{
 					Vector2 cursorPos = GUIUtility.ScreenToGUIPoint (Event.current.mousePosition);
-					tilePickerWindowPosition = new Rect (cursorPos + new Vector2 (20, 0), Vector2.zero);
+					tileMap.tilePickerWindowPosition = new Rect (cursorPos + new Vector2 (20, 0), Vector2.zero);
 				}
 
 				DrawGrid ();
@@ -67,15 +55,16 @@ namespace toinfiniityandbeyond.Tilemapping
 				HandleShortcutEvents ();
 				HandleMouseEvents ();
 
-				tileMap.transform.position = transformData.position;
-				tileMap.transform.rotation = transformData.rotation;
+				tileMap.transform.position = tileMap.position;
+				tileMap.transform.rotation = tileMap.rotation;
 				tileMap.transform.localScale = Vector3.one;
 
 				HandleUtility.AddDefaultControl (GUIUtility.GetControlID (FocusType.Passive));
 				SceneView.RepaintAll ();
 			} else
 			{
-				transformData = new TransformData (tileMap.transform);
+				tileMap.position = tileMap.transform.position;
+				tileMap.rotation = tileMap.transform.rotation;
 			}
 			DrawOutline ();
 		}
@@ -83,9 +72,9 @@ namespace toinfiniityandbeyond.Tilemapping
 		private void ToolbarWindow (int id)
 		{
 			string text = "None";
-
-			Rect secondaryTileRect = new Rect (toolbarWindowPosition.width - 5 - toolbarWindowPosition.width * 0.4f, 25 + toolbarWindowPosition.width * 0.4f, toolbarWindowPosition.width * 0.4f, toolbarWindowPosition.width * 0.4f);
-			secondaryTilePickerToggle = GUI.Toggle (secondaryTileRect, secondaryTilePickerToggle, GUIContent.none, "Button");
+			
+			Rect secondaryTileRect = new Rect (tileMap.toolbarWindowPosition.width - 5 - tileMap.toolbarWindowPosition.width * 0.4f, 25 + tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f);
+			tileMap.secondaryTilePickerToggle = GUI.Toggle (secondaryTileRect, tileMap.secondaryTilePickerToggle, GUIContent.none, "Button");
 
 			GUI.contentColor = Color.black;
 			if (tileMap.secondaryTile)
@@ -94,10 +83,10 @@ namespace toinfiniityandbeyond.Tilemapping
 				GUI.contentColor = Color.white;
 				text = tileMap.secondaryTile.Name;
 			}
-			GUI.Label (secondaryTileRect, text, CustomStyles.centeredWhiteMiniLabel);
+			GUI.Label (secondaryTileRect, text, CustomStyles.centerWhiteMiniLabel);
 
-			Rect primaryTileRect = new Rect (5, 25, toolbarWindowPosition.width * 0.6f, toolbarWindowPosition.width * 0.6f);
-			primaryTilePickerToggle = GUI.Toggle (primaryTileRect, primaryTilePickerToggle, GUIContent.none, "Button");
+			Rect primaryTileRect = new Rect (5, 25, tileMap.toolbarWindowPosition.width * 0.6f, tileMap.toolbarWindowPosition.width * 0.6f);
+			tileMap.primaryTilePickerToggle = GUI.Toggle (primaryTileRect, tileMap.primaryTilePickerToggle, GUIContent.none, "Button");
 
 			text = "None";
 
@@ -108,15 +97,15 @@ namespace toinfiniityandbeyond.Tilemapping
 				GUI.contentColor = Color.white;
 				text = tileMap.primaryTile.Name;
 			}
-			GUI.Label (primaryTileRect, text, CustomStyles.centeredWhiteBoldLabel);
+			GUI.Label (primaryTileRect, text, CustomStyles.centerWhiteBoldLabel);
 			GUI.contentColor = Color.white;
 
-			GUILayout.Space (toolbarWindowPosition.width);
+			GUILayout.Space (tileMap.toolbarWindowPosition.width);
 
 			GUILayout.BeginHorizontal ();
 			if (GUILayout.Button ("Swap [X]"))
 			{
-				SwapCurrentTiles ();
+				Swap<ScriptableTile> (ref tileMap.primaryTile, ref tileMap.secondaryTile);
 			}
 			GUI.color = new Color (1, 0.5f, 0.5f);
 			if (GUILayout.Button ("Clear"))
@@ -129,46 +118,143 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			CustomGUILayout.Splitter();
 
-			GUILayout.Label ("Brushes", EditorStyles.boldLabel);
+			GUILayout.Label ("Tools", CustomStyles.leftBoldLabel);
+			EditorGUILayout.HelpBox ("[RMB] to toggle last tool", MessageType.Info, true);
 
-			for (int i = 0; i < scriptableBrushCache.Count; i++)
+			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 			{
-				bool selected = (i == selectedScriptableBrush);
+				bool selected = (i == tileMap.selectedScriptableTool);
 				EditorGUI.BeginChangeCheck ();
-				string labelName = scriptableBrushCache [i].ShortcutKeyCode != KeyCode.None ?
-							string.Format("{1} [{0}]", scriptableBrushCache [i].ShortcutKeyCode.ToString(), scriptableBrushCache [i].Name) :
-							scriptableBrushCache [i].Name;
+				string labelName = tileMap.scriptableToolCache [i].ShortcutKeyCode != KeyCode.None ?
+							string.Format("{1} [{0}]", tileMap.scriptableToolCache [i].ShortcutKeyCode.ToString(), tileMap.scriptableToolCache [i].Name) :
+							tileMap.scriptableToolCache [i].Name;
 
-				GUIContent content = new GUIContent (labelName, scriptableBrushCache [i].Description);
+				GUIContent content = new GUIContent (labelName, tileMap.scriptableToolCache [i].Description);
 				GUILayout.Toggle (selected, content, EditorStyles.radioButton, GUILayout.Width (100));
 				if (EditorGUI.EndChangeCheck())
 				{
-					selectedScriptableBrush = i;
+					tileMap.lastSelectedScriptableTool = tileMap.selectedScriptableTool;
+
+					tileMap.selectedScriptableTool = i;
 
 					if (selected)
-						selectedScriptableBrush = -1;
+						tileMap.selectedScriptableTool = -1;
 				}
 			}
-			if (selectedScriptableBrush == -1)
+			if (tileMap.selectedScriptableTool == -1)
 			{
-				EditorGUILayout.HelpBox ("No brush selected, select one from above.", MessageType.Warning, true);
+				EditorGUILayout.HelpBox ("No Tool selected, select one from above.", MessageType.Warning, true);
 			}
-			if(selectedScriptableBrush >= 0 && selectedScriptableBrush < scriptableBrushCache.Count)
+			if(tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
 			{
 				const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-				FieldInfo [] fields = scriptableBrushCache [selectedScriptableBrush].GetType ().GetFields (flags);
+				FieldInfo [] fields = tileMap.scriptableToolCache [tileMap.selectedScriptableTool].GetType ().GetFields (flags);
 
 				if (fields.Length > 0)
 				{
-					GUILayout.Label ("Settings", EditorStyles.boldLabel, GUILayout.Width (100));
+					GUILayout.Label ("Settings", CustomStyles.leftBoldLabel, GUILayout.Width (100));
 					for (int i = 0; i < fields.Length; i++)
 					{
-						FieldInfo fieldInfo = fields [i];
-						DrawFieldInfo (fieldInfo);
+						FieldInfo field = fields [i];
+						Type type = field.FieldType;
+						string fieldName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase (field.Name);
+
+						GUILayout.BeginHorizontal (GUILayout.Width (100));
+						GUILayout.Label (fieldName, EditorStyles.miniLabel);
+						if (type == typeof (bool))
+						{
+							bool v = (bool)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							bool nv = EditorGUILayout.Toggle (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (float))
+						{
+							float v = (float)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							float nv = EditorGUILayout.FloatField (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (int))
+						{
+							int v = (int)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							int nv = EditorGUILayout.IntField (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Enum))
+						{
+							int v = (int)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							int nv = EditorGUILayout.IntField (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Vector2))
+						{
+							Vector2 v = (Vector2)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							Vector2 nv = Vector2.zero;
+							nv.x = EditorGUILayout.FloatField (v.x);
+							nv.y = EditorGUILayout.FloatField (v.y);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Vector3))
+						{
+							Vector3 v = (Vector3)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							Vector3 nv = Vector3.zero;
+							nv.x = EditorGUILayout.FloatField (v.x);
+							nv.y = EditorGUILayout.FloatField (v.y);
+							nv.z = EditorGUILayout.FloatField (v.z);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Color))
+						{
+							Color v = (Color)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							Color nv = EditorGUILayout.ColorField (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (AnimationCurve))
+						{
+							AnimationCurve v = (AnimationCurve)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							AnimationCurve nv = EditorGUILayout.CurveField (v);
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (GameObject))
+						{
+							GameObject v = (GameObject)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							GameObject nv = EditorGUILayout.ObjectField (v, typeof(GameObject), false) as GameObject;
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Texture2D))
+						{
+							Texture2D v = (Texture2D)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							Texture2D nv = EditorGUILayout.ObjectField (v, typeof (Texture2D), false) as Texture2D;
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (Sprite))
+						{
+							Sprite v = (Sprite)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							Sprite nv = EditorGUILayout.ObjectField (v, typeof (Sprite), false) as Sprite;
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type == typeof (UnityEngine.Object))
+						{
+							UnityEngine.Object v = (UnityEngine.Object)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							UnityEngine.Object nv = EditorGUILayout.ObjectField (v, typeof (UnityEngine.Object), false) as UnityEngine.Object;
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else if (type.IsEnum)
+						{
+							int v = (int)field.GetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool]);
+							int nv = EditorGUILayout.Popup (v, Enum.GetNames (type));
+							field.SetValue (tileMap.scriptableToolCache [tileMap.selectedScriptableTool], nv);
+						}
+						else
+						{
+							Debug.LogErrorFormat ("Exposing public variable type '{0}' is currently not supported by Tooles \n Feel free to add support for it though!", type.Name);
+						}
+						GUILayout.EndHorizontal ();
+
 					}
-				} else
+				}
+				else
 				{
-					EditorGUILayout.HelpBox ("Brush has no public variables to edit.", MessageType.Info, true);
+					EditorGUILayout.HelpBox ("Tool has no public variables to edit.", MessageType.Info, true);
 				}
 			}
 
@@ -179,13 +265,13 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			GUI.BringWindowToFront (id);
 
-			if (scriptableTileCache.Count > 0)
+			if (tileMap.scriptableTileCache.Count > 0)
 			{
 				int columns = 4;
-				int rows = Mathf.CeilToInt (1 + (scriptableTileCache.Count) / columns);
-				float tileWidth = (tilePickerWindowPosition.width - 50) / columns;
+				int rows = Mathf.CeilToInt (1 + (tileMap.scriptableTileCache.Count) / columns);
+				float tileWidth = (tileMap.tilePickerWindowPosition.width - 50) / columns;
 
-				tilePickerScrollView = GUILayout.BeginScrollView (tilePickerScrollView, false, true, GUILayout.Height(tileWidth * 4));
+				tileMap.tilePickerScrollView = GUILayout.BeginScrollView (tileMap.tilePickerScrollView, false, true, GUILayout.Height(tileWidth * 4));
 
 				GUILayout.BeginVertical ();
 				for (int y = 0; y < rows; y++)
@@ -201,42 +287,42 @@ namespace toinfiniityandbeyond.Tilemapping
 							if (GUILayout.Button (GUIContent.none, GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
 							{
 								tileToChange = null;
-								primaryTilePickerToggle = secondaryTilePickerToggle = false;
+								tileMap.primaryTilePickerToggle = tileMap.secondaryTilePickerToggle = false;
 							}
-							GUI.Label (GUILayoutUtility.GetLastRect(), "None", CustomStyles.centeredBoldLabel);
+							GUI.Label (GUILayoutUtility.GetLastRect(), "None", CustomStyles.centerBoldLabel);
 						}
 
-						if (index >= scriptableTileCache.Count ||index < 0)
+						if (index >= tileMap.scriptableTileCache.Count ||index < 0)
 							continue;
 
-						GUI.color = scriptableTileCache [index].IsValid ? Color.white : new Color(1, 0.5f, 0.5f);
+						GUI.color = tileMap.scriptableTileCache [index].IsValid ? Color.white : new Color(1, 0.5f, 0.5f);
 
 						if (GUILayout.Button (GUIContent.none, GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
 						{
-							if (scriptableTileCache [index].IsValid)
+							if (tileMap.scriptableTileCache [index].IsValid)
 							{
-								tileToChange = scriptableTileCache [index];
-								primaryTilePickerToggle = secondaryTilePickerToggle = false;
+								tileToChange = tileMap.scriptableTileCache [index];
+								tileMap.primaryTilePickerToggle = tileMap.secondaryTilePickerToggle = false;
 							}
 							else
 							{
 								Type pt = Assembly.GetAssembly (typeof (Editor)).GetType ("UnityEditor.ProjectBrowser");
 								EditorWindow.GetWindow (pt).Show ();
-								EditorGUIUtility.PingObject (scriptableTileCache [index]);
+								EditorGUIUtility.PingObject (tileMap.scriptableTileCache [index]);
 							}
 						}
 
 					
 						Rect buttonRect = GUILayoutUtility.GetLastRect ();
 						string tileText = "...";
-						if (scriptableTileCache [index].IsValid)
+						if (tileMap.scriptableTileCache [index].IsValid)
 						{
-							GUI.DrawTexture (buttonRect, scriptableTileCache [index].GetTexture (tileMap));
-							tileText = scriptableTileCache [index].Name;
+							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetTexture (tileMap));
+							tileText = tileMap.scriptableTileCache [index].Name;
 						}
 						GUI.color = Color.white;
 
-						GUI.Label (buttonRect, tileText, CustomStyles.centeredWhiteBoldLabel);
+						GUI.Label (buttonRect, tileText, CustomStyles.centerWhiteBoldLabel);
 					}
 					GUILayout.EndHorizontal ();
 				}
@@ -255,7 +341,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.color = new Color (1f, 0.5f, 0.5f);
 			if (GUILayout.Button ("Close Tile Picker"))
 			{
-				primaryTilePickerToggle = secondaryTilePickerToggle = false;
+				tileMap.primaryTilePickerToggle = tileMap.secondaryTilePickerToggle = false;
 			}
 			GUI.color = Color.white;
 
@@ -263,90 +349,29 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			GUI.DragWindow ();
 		}
-		private void SwapCurrentTiles()
+		private void Swap<T>(ref T a, ref T b)
 		{
-			ScriptableTile temp = tileMap.primaryTile;
-			tileMap.primaryTile = tileMap.secondaryTile;
-			tileMap.secondaryTile = temp;
-		}
-		private void DrawFieldInfo (FieldInfo field)
-		{
-			Type type = field.FieldType;
-			ScriptableBrush scriptableBrush = scriptableBrushCache [selectedScriptableBrush];
-			string fieldName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase (field.Name);
-
-			GUILayout.BeginHorizontal (GUILayout.Width (100));
-			GUILayout.Label (fieldName, EditorStyles.miniLabel);
-			if (type == typeof (bool))
-			{
-				bool v = (bool)field.GetValue (scriptableBrush);
-				bool nv = EditorGUILayout.Toggle (v);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if (type == typeof (float))
-			{
-				float v = (float)field.GetValue (scriptableBrush);
-				float nv = EditorGUILayout.FloatField (v);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if (type == typeof (int))
-			{
-				int v = (int)field.GetValue (scriptableBrush);
-				int nv = EditorGUILayout.IntField (v);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if (type == typeof (Enum))
-			{
-				int v = (int)field.GetValue (scriptableBrush);
-				int nv = EditorGUILayout.IntField (v);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if (type == typeof (Vector2))
-			{
-				Vector2 v = (Vector2)field.GetValue (scriptableBrush);
-				Vector2 nv = Vector2.zero;
-				nv.x = EditorGUILayout.FloatField (v.x);
-				nv.y = EditorGUILayout.FloatField (v.y);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if (type == typeof (Vector3))
-			{
-				Vector3 v = (Vector3)field.GetValue (scriptableBrush);
-				Vector3 nv = Vector3.zero;
-				nv.x = EditorGUILayout.FloatField (v.x);
-				nv.y = EditorGUILayout.FloatField (v.y);
-				nv.z = EditorGUILayout.FloatField (v.z);
-				field.SetValue (scriptableBrush, nv);
-			}
-			else if(type.IsEnum)
-			{
-				int v = (int)field.GetValue (scriptableBrush);
-				int nv = EditorGUILayout.Popup (v, Enum.GetNames(type));
-				field.SetValue (scriptableBrush, nv);
-			}
-			else
-			{
-				Debug.LogErrorFormat (this, "Exposing public variable type '{0}' is currently not supported by brushes \n Feel free to add support for it though!", type.Name);
-			}
-			GUILayout.EndHorizontal ();
+			T t = a;
+			a = b;
+			b = t;
 		}
 
-		private void RefreshScriptableBrushCache()
+		private void RefreshScriptableToolCache()
 		{
-			foreach (Type type in Assembly.GetAssembly (typeof (ScriptableBrush)).GetTypes ()
-					 .Where (myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf (typeof (ScriptableBrush))))
+			foreach (Type type in Assembly.GetAssembly (typeof (ScriptableTool)).GetTypes ()
+					 .Where (myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf (typeof (ScriptableTool))))
 			{
 				bool containsType = false;
-				for (int i = 0; i < scriptableBrushCache.Count; i++)
+				for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 				{
-					if (scriptableBrushCache[i].GetType () == type)
+					if (tileMap.scriptableToolCache [i].GetType () == type)
 					{
 						containsType = true;
 						break;
 					}
 				}
 				if(!containsType)
-					scriptableBrushCache.Add ((ScriptableBrush)Activator.CreateInstance (type));
+					tileMap.scriptableToolCache.Add ((ScriptableTool)Activator.CreateInstance (type));
 			}
 		}
 		private void RefreshScriptableTileCache ()
@@ -356,9 +381,9 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				string assetPath = AssetDatabase.GUIDToAssetPath (guids [i]);
 				ScriptableTile asset = AssetDatabase.LoadAssetAtPath<ScriptableTile> (assetPath);
-				if (asset != null && !scriptableTileCache.Contains(asset))
+				if (asset != null && !tileMap.scriptableTileCache.Contains(asset))
 				{
-					scriptableTileCache.Add (asset);
+					tileMap.scriptableTileCache.Add (asset);
 				}
 			}
 		}
@@ -368,7 +393,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			float width = tileMap.Width;
 			float height = tileMap.Height;
 
-			Vector3 position = transformData.position;
+			Vector3 position = tileMap.position;
 
 			Handles.color = Color.gray;
 			for (float i = 1; i < width; i++)
@@ -385,7 +410,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			float width = tileMap.Width;
 			float height = tileMap.Height;
 
-			Vector3 position = transformData.position;
+			Vector3 position = tileMap.position;
 
 			Handles.color = Color.white;
 			Handles.DrawLine (position, new Vector3 (width + position.x, position.y));
@@ -395,16 +420,18 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void HandleShortcutEvents()
 		{
-			for (int i = 0; i < scriptableBrushCache.Count; i++)
+			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 			{
-				if (Event.current.isKey && Event.current.keyCode == scriptableBrushCache [i].ShortcutKeyCode)
+				if (Event.current.isKey && Event.current.keyCode == tileMap.scriptableToolCache [i].ShortcutKeyCode)
 				{
-					selectedScriptableBrush = i;
+					tileMap.lastSelectedScriptableTool = tileMap.selectedScriptableTool;
+					tileMap.selectedScriptableTool = i;
 				}
 			}
+
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.X)
 			{
-				SwapCurrentTiles ();
+				Swap <ScriptableTile>(ref tileMap.primaryTile, ref tileMap.secondaryTile);
 			}
 		}
 		private void HandleMouseEvents ()
@@ -416,32 +443,39 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				if ( (e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && e.button == 0)
 				{
-					if (selectedScriptableBrush >= 0 && selectedScriptableBrush < scriptableBrushCache.Count)
+					if (tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
 					{
-						if (scriptableBrushCache [selectedScriptableBrush].Paint (point, tileMap.primaryTile, tileMap))
+						if (tileMap.scriptableToolCache [tileMap.selectedScriptableTool].Use (point, tileMap.primaryTile, tileMap))
 						{
 							Undo.RecordObject (tileMap, "Paint Tilemap");
 						}
 					}
 				}
 			}
+			if ((e.type == EventType.MouseDown) && e.button == 1)
+			{
+				Swap<int> (ref tileMap.selectedScriptableTool, ref tileMap.lastSelectedScriptableTool);
+			}
+
 		}
 		private bool GetMousePosition (ref Coordinate point)
 		{
 			if (SceneView.currentDrawingSceneView == null)
 				return false;
 
-			Plane plane = new Plane (tileMap.transform.TransformDirection (Vector3.forward), transformData.position);
+			Plane plane = new Plane (tileMap.transform.TransformDirection (Vector3.forward), tileMap.position);
 			Ray ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
-			Vector3 position = transformData.position;
+			Vector3 position = tileMap.position;
 
 			float distance;
 			if (plane.Raycast (ray, out distance))
 				point = (Coordinate)(ray.origin + (ray.direction.normalized * distance)- position);
 
 			bool result = (point.x >= 0 && point.x < position.x + tileMap.Width && point.y >= 0 && point.y < tileMap.Height);
-			Handles.color = result ? (selectedScriptableBrush  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
+			Handles.color = result ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
 			Handles.DrawWireCube ((Vector2)position + (Vector2)point + Vector2.one * 0.5f, Vector2.one);
+			Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
+			Handles.CubeCap (0, (Vector2)position + (Vector2)point + Vector2.one * 0.5f, Quaternion.identity, 1f);
 			
 			return result;
 		}
@@ -451,25 +485,6 @@ namespace toinfiniityandbeyond.Tilemapping
 			r.x = Mathf.Clamp (r.x, 5, Screen.width - r.width - 5);
 			r.y = Mathf.Clamp (r.y, 25, Screen.height - r.height - 25);
 			return r;
-		}
-		private struct TransformData
-		{
-			public Vector3 position;
-			public Quaternion rotation;
-			//public Vector3 scale;
-
-			public TransformData (Vector3 p, Quaternion r)// Vector3 s)
-			{
-				position = p;
-				rotation = r;
-				//scale = s;
-			}
-			public TransformData (Transform t)
-			{
-				position = t.position;
-				rotation = t.rotation;
-			//	scale = t.localScale;
-			}
 		}
 	}
 }
