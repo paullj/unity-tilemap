@@ -27,7 +27,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <summary>
 		/// Small summary on what the ScriptableTool does
 		/// </summary>
-		public virtual KeyCode ShortcutKeyCode { get { return KeyCode.None; } }
+		public virtual KeyCode Shortcut { get { return KeyCode.None; } }
 		/// <summary>
 		/// Small summary on what the ScriptableTool does
 		/// </summary>

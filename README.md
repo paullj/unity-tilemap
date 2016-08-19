@@ -8,5 +8,5 @@ In the project window click on _Create > Tilemap > Tiles_ and select a scriptabl
 
 If you want to create your own scriptable tiles (Like the **Tile** or **AutoTile**) then click on _Create > Tilemap > Create C# Tile Script_ and edit like anyother script. Alternatively create a C# class that inherits **ScriptableTile**
 
-### Can I make custom brushes?
-Yes. If you want to create your own brushes (Like the **Pencil** or **Eyedropper**) then click on _Create > Tilemap > Create C# Stencil Script_ and edit like anyother script. Since all brushes (even the included ones) inherit from **ScriptableBrush** you can also simply create a C# class that inherits from **ScriptableBrush**. Any class that inherits **ScriptableBrush** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.
+### Can I make custom tools?
+Yes. If you want to create your own tools (Like the **Pencil** or **Eyedropper**) then click on _Create > Tilemap > Create C# Tool Script_ and edit like anyother script. Since all tools (even the included ones) inherit from **ScriptableTool** you can also simply create a C# class that inherits from **ScriptableTool**. Any class that inherits **ScriptableTool** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.

@@ -21,7 +21,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public enum BrushShape { Square, Circle, }
 		public BrushShape shape;
 
-		public override KeyCode ShortcutKeyCode { get { return KeyCode.B; } }
+		public override KeyCode Shortcut { get { return KeyCode.B; } }
 		public override string Description { get { return "A simple brush"; } }
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <param name="map">What you want to paint on</param>
 		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
 		{
-			if (tile == null && map == null)
+			if (tile == null || map == null)
 				return false;
 
 			int correctedRadius = radius - 1;

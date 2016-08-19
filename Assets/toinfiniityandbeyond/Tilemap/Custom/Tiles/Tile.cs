@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	[CreateAssetMenu (fileName = "New Tile", menuName = "Tilemap/Tiles/Tile", order = 0)]
+	[CreateAssetMenu (fileName = "New Tile", menuName = "Tilemap/Tiles/Tile")]
 	public class Tile : ScriptableTile
 	{
 		[SerializeField]

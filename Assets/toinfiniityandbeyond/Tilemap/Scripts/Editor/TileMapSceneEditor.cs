@@ -72,7 +72,6 @@ namespace toinfiniityandbeyond.Tilemapping
 		private void ToolbarWindow (int id)
 		{
 			string text = "None";
-			
 			Rect secondaryTileRect = new Rect (tileMap.toolbarWindowPosition.width - 5 - tileMap.toolbarWindowPosition.width * 0.4f, 25 + tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f);
 			tileMap.secondaryTilePickerToggle = GUI.Toggle (secondaryTileRect, tileMap.secondaryTilePickerToggle, GUIContent.none, "Button");
 
@@ -100,7 +99,9 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.Label (primaryTileRect, text, CustomStyles.centerWhiteBoldLabel);
 			GUI.contentColor = Color.white;
 
-			GUILayout.Space (tileMap.toolbarWindowPosition.width);
+			float tileHeight = 10 + primaryTileRect.height + 0.5f * secondaryTileRect.height;
+
+			GUILayout.Space (tileHeight);
 
 			GUILayout.BeginHorizontal ();
 			if (GUILayout.Button ("Swap [X]"))
@@ -125,8 +126,8 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				bool selected = (i == tileMap.selectedScriptableTool);
 				EditorGUI.BeginChangeCheck ();
-				string labelName = tileMap.scriptableToolCache [i].ShortcutKeyCode != KeyCode.None ?
-							string.Format("{1} [{0}]", tileMap.scriptableToolCache [i].ShortcutKeyCode.ToString(), tileMap.scriptableToolCache [i].Name) :
+				string labelName = tileMap.scriptableToolCache [i].Shortcut != KeyCode.None ?
+							string.Format("{1} [{0}]", tileMap.scriptableToolCache [i].Shortcut.ToString(), tileMap.scriptableToolCache [i].Name) :
 							tileMap.scriptableToolCache [i].Name;
 
 				GUIContent content = new GUIContent (labelName, tileMap.scriptableToolCache [i].Description);
@@ -422,7 +423,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 			{
-				if (Event.current.isKey && Event.current.keyCode == tileMap.scriptableToolCache [i].ShortcutKeyCode)
+				if (Event.current.isKey && Event.current.keyCode == tileMap.scriptableToolCache [i].Shortcut)
 				{
 					tileMap.lastSelectedScriptableTool = tileMap.selectedScriptableTool;
 					tileMap.selectedScriptableTool = i;

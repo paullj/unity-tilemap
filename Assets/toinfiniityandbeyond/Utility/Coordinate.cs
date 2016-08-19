@@ -6,11 +6,11 @@ public struct Coordinate
 	public static Coordinate zero = new Coordinate (0, 0);
 	public static Coordinate one = new Coordinate (1, 1);
 
-	public static Coordinate up = new Coordinate (0, 1);
-	public static Coordinate down = new Coordinate (0, -1);
-	public static Coordinate left = new Coordinate (1, 0);
-	public static Coordinate right = new Coordinate (-1, 0);
-	
+	public static Coordinate north = new Coordinate (0, 1);
+	public static Coordinate south = new Coordinate (0, -1);
+	public static Coordinate west = new Coordinate (1, 0);
+	public static Coordinate east = new Coordinate (-1, 0);
+
 	public int x;
 	public int y;
 
@@ -19,6 +19,11 @@ public struct Coordinate
 		this.x = x;
 		this.y = y;
 	}
+
+	public Coordinate Up { get { return this + north; }}
+	public Coordinate Down { get { return this + south; }}
+	public Coordinate Left { get { return this + west; }}
+	public Coordinate Right { get { return this + east; }}
 
 	public override string ToString ()
 	{

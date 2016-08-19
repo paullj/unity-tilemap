@@ -6,7 +6,7 @@ namespace toinfiniityandbeyond.Tilemapping
 	public abstract class ScriptableTile : ScriptableObject
 	{
 		public string Name { get { return this.name; } }
-		public int ID { get { return Animator.StringToHash (Name); } }
+		public int ID { get { return GetInstanceID(); } }
 
 		public abstract bool IsValid { get; }
 

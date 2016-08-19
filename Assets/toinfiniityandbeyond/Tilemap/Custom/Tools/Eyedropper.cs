@@ -12,7 +12,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 
 		}
-		public override KeyCode ShortcutKeyCode { get { return KeyCode.I; } }
+		public override KeyCode Shortcut { get { return KeyCode.I; } }
 		public override string Description { get { return "Sets the primary tile to whatever you click"; } }
 
 		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)

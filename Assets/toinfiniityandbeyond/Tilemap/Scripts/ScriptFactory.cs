@@ -27,32 +27,41 @@ public class ScriptFactory
 			using (StreamWriter outfile = new StreamWriter (path))
 			{
 				outfile.WriteLine ("using UnityEngine;");
-				outfile.WriteLine ("	");
+				outfile.WriteLine ("");
 				outfile.WriteLine ("namespace toinfiniityandbeyond.Tilemapping");
 				outfile.WriteLine ("{");
-				outfile.WriteLine ("	//Public variables automatically get exposed in the tile editor");
 				outfile.WriteLine ("	");
-				outfile.WriteLine ("	");
-				outfile.WriteLine ("	");
-
+				outfile.WriteLine ("	[System.Serializable]");
 				outfile.WriteLine ("	public class " + name + " : ScriptableTool");
 				outfile.WriteLine ("	{");
+				outfile.WriteLine ("		//Public variables automatically get exposed in the tile editor");
+				outfile.WriteLine ("		");
 				outfile.WriteLine ("		public "+name+"() : base()");
 				outfile.WriteLine ("		{");
-				outfile.WriteLine ("			//You can set any default variables here");
+				outfile.WriteLine ("			//You can set any defaults for variables here");
 				outfile.WriteLine ("		}");
+				outfile.WriteLine ("		");
+				outfile.WriteLine ("		/*");
 				outfile.WriteLine ("		//If you want this ScriptableTool to have a shortcut set it here");
-				outfile.WriteLine ("		public override KeyCode ShortcutKeyCode { get { return KeyCode.None; } }");
+				outfile.WriteLine ("		public override KeyCode Shortcut");
+				outfile.WriteLine ("		{");
+				outfile.WriteLine ("			get { return KeyCode.None; }");
+				outfile.WriteLine ("		}");
+				outfile.WriteLine ("		");
 				outfile.WriteLine ("		//If you want this ScriptableTool to have a description set it here");
-				outfile.WriteLine ("		public override string Description { get { return string.Empty; } }");
-				outfile.WriteLine ("	 ");
+				outfile.WriteLine ("		public override string Description");
+				outfile.WriteLine ("		{");
+				outfile.WriteLine ("			get { return string.Empty; }");
+				outfile.WriteLine ("		}");
+				outfile.WriteLine ("		*/");
+				outfile.WriteLine ("		");
 				outfile.WriteLine ("		//Called when you left click on a tile map when in edit mode");
-				outfile.WriteLine ("		public override void Use (Coordinate point, Tile tile, TileMap map)");
+				outfile.WriteLine ("		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)");
 				outfile.WriteLine ("		{");
 				outfile.WriteLine ("			if (tile == null && map == null)");
 				outfile.WriteLine ("				return false;");
-				outfile.WriteLine ("	");
-				outfile.WriteLine ("			map.SetTileAt (point, tile);");
+				outfile.WriteLine ("			");
+				outfile.WriteLine ("			return map.SetTileAt (point, tile);");
 				outfile.WriteLine ("		}");
 				outfile.WriteLine ("	}");
 				outfile.WriteLine ("}");
@@ -66,7 +75,7 @@ public class ScriptFactory
 		EditorGUIUtility.PingObject (Selection.activeObject);
 	}
 
-	[MenuItem ("Assets/Create/Tilemap/New C# Tile Scripts")]
+	[MenuItem ("Assets/Create/Tilemap/New C# Tile Script")]
 	private static void CreateTileScript ()
 	{
 		string name = "NewTileScript";
@@ -94,7 +103,7 @@ public class ScriptFactory
 				outfile.WriteLine ("namespace toinfiniityandbeyond.Tilemapping");
 				outfile.WriteLine ("{");
 				outfile.WriteLine ("	//Remember to change these names to something more meaningful!");
-				outfile.WriteLine (@"	[CreateAssetMenu (fileName = ""New Script Tile"", menuName = ""Tilemap / Tiles / NewTileScript"", order = 0)]");
+				outfile.WriteLine (@"	[CreateAssetMenu (fileName = ""New Script Tile"", menuName = ""Tilemap/Tiles/NewTileScript"")]");
 				outfile.WriteLine ("	public class " + name + " : ScriptableTile");
 				outfile.WriteLine ("	{");
 				outfile.WriteLine ("		[SerializeField]");

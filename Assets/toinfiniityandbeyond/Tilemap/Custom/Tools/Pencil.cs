@@ -10,7 +10,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 
 		}
-		public override KeyCode ShortcutKeyCode { get { return KeyCode.P; } }
+		public override KeyCode Shortcut { get { return KeyCode.P; } }
 		public override string Description { get { return "The simplest brush"; } }
 
 		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
