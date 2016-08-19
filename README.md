@@ -1,7 +1,7 @@
 # Tilemap
 A simple yet highly customisable tile mapping tool made for the Unity Engine
 
-![]({{site.baseurl}}/tilemap.gif)
+!["Oops! There is supposed to be an image here :/"]({{site.baseurl}}/images/tilemap.gif)
 
 ## Help
 
