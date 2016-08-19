@@ -1,6 +1,8 @@
 # Tilemap
 A simple yet highly customisable tile mapping tool made for the Unity Engine
 
+![]({{site.baseurl}}/tilemap.gif)
+
 ## Help
 
 ### How do I make my own tiles?
