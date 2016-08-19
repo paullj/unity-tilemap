@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	[ExecuteInEditMode, AddComponentMenu ("Tilemapping/Tilemap")]
+	[ExecuteInEditMode, AddComponentMenu ("Tilemapping/Tilemap"), HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
 	public class TileMap : MonoBehaviour
 	{
 		[SerializeField]

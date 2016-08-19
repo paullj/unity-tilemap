@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	[ExecuteInEditMode, AddComponentMenu ("Tilemapping/TilemapRenderer")]
+	[ExecuteInEditMode, AddComponentMenu ("Tilemapping/TilemapRenderer"), HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileRenderer-Component")]
 	public class TileRenderer : MonoBehaviour
 	{
 		public Color color;

@@ -359,6 +359,12 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		private void RefreshScriptableToolCache()
 		{
+			List<ScriptableTool> toRemove = new List<ScriptableTool> ();
+			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++) {
+				if (tileMap.scriptableToolCache [i] == null)
+					toRemove.Add (tileMap.scriptableToolCache [i]);
+			}
+			tileMap.scriptableToolCache = tileMap.scriptableToolCache.Except (toRemove).ToList ();
 			foreach (Type type in Assembly.GetAssembly (typeof (ScriptableTool)).GetTypes ()
 					 .Where (myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf (typeof (ScriptableTool))))
 			{
@@ -377,6 +383,12 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void RefreshScriptableTileCache ()
 		{
+			List<ScriptableTile> toRemove = new List<ScriptableTile> ();
+			for (int i = 0; i < tileMap.scriptableTileCache.Count; i++) {
+				if (tileMap.scriptableTileCache [i] == null)
+					toRemove.Add (tileMap.scriptableTileCache [i]);
+			}
+			tileMap.scriptableTileCache = tileMap.scriptableTileCache.Except (toRemove).ToList ();
 			string [] guids = AssetDatabase.FindAssets (string.Format ("t:{0}", typeof (ScriptableTile)));
 			for (int i = 0; i < guids.Length; i++)
 			{
