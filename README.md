@@ -2,7 +2,7 @@
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
-[Help](#help)    
+[Help](#help--more-on-the-wiki)    
 [Contact](#contact)
 
 ## About
