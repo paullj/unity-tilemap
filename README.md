@@ -2,7 +2,7 @@
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
-[Help](#help--more-on-the-wiki)    
+[Help](#help)    
 [Contact](#contact)
 
 ## About
@@ -20,7 +20,7 @@ blah blah blah
 
 !["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
 
-## Help ([More on the wiki](../../wiki))
+## Help ([More on the wiki](../../wiki))<a name="help"></a>
 
 ### How do I make my own tiles?
 In the project window click on _Create > Tilemap > Tiles_ and select a scriptable tile type to create. You can edit the tiles variables by just clicking on it, like anyother asset.
