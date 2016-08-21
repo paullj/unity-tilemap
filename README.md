@@ -1,5 +1,14 @@
 # Tilemap
-A simple yet highly customisable tile mapping tool made for the Unity Engine
+A simple yet highly customisable tile mapping tool made for the Unity Engine.
+
+## About
+blah blah
+### Features
+- Scriptable Tiles, allows
+- In Editor, tile 
+    - Customisable Tools
+- _TODO: Different rendering modes_
+
 
 !["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
 
