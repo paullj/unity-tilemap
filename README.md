@@ -8,9 +8,17 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 ## About
 blah blah blah
 ### Features
-* Scriptable tiles, allows custom behaviour
+* Scriptable tiles, allows custom behaviour. Including
+	* Tile
+	* Autotile
+	* **TODO:** AnimatedTile
 * Tile Editor
-	* Scriptable tools, allows custom behaviour
+	* Scriptable tools, allows custom behaviour. Including:
+		*  Pencil
+		*  Brush
+		*  Fill
+		*  Eraser
+		*  Eyedropper
 	* **TODO:** Proper Undo/Redo  
 	* **TODO:** Export/Import to JSON or ScriptableObject
 * Different rendering modes
