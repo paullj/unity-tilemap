@@ -6,7 +6,7 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 [Contact](#contact)
 
 ## About
-blah blah
+blah blah blah
 ### Features
 * Scriptable Tiles, allows
 * Tile Editor
