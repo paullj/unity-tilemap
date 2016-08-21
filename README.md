@@ -18,7 +18,7 @@ blah blah blah
     * **TODO:** Single Quad
     * **TODO:** Multiple Quads
     * **TODO:** Chunked Quads
-* **TODO:** Infinite or limited tilemap size (only available on chunked quads)
+* **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
     
 !["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
 
