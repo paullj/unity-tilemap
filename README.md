@@ -11,13 +11,13 @@ blah blah blah
 * Scriptable tiles, allows custom behaviour
 * Tile Editor
 	* Scriptable tools, allows custom behaviour
-    	* **TODO:** Proper Undo/Redo  
-    	* **TODO:** Export/Import to JSON or ScriptableObject
+	* **TODO:** Proper Undo/Redo  
+	* **TODO:** Export/Import to JSON or ScriptableObject
 * Different rendering modes
 	* Single Sprites
 	* **TODO:** Single Quad
-    	* **TODO:** Multiple Quads
-    	* **TODO:** Chunked Quads
+	* **TODO:** Multiple Quads
+	* **TODO:** Chunked Quads
 * **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
 * **TODO:** Layers
 
