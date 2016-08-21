@@ -5,7 +5,7 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 blah blah
 ### Features
 - Scriptable Tiles, allows
-- In Editor, tile 
+- Tile Editor in 
     - Customisable Tools
 - _TODO: Different rendering modes_
 
