@@ -7,7 +7,7 @@ blah blah
 * Scriptable Tiles, allows
 * Tile Editor
 	* Customisable Tools
-    * **TODO:** Prper Undo/Redo
+    * **TODO:** Proper Undo/Redo
 * Different rendering modes
 	* Single Sprites
     * **TODO:** Single Quad
