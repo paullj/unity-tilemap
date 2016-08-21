@@ -4,11 +4,15 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 ## About
 blah blah
 ### Features
-- Scriptable Tiles, allows
-- Tile Editor
-    - Customisable Tools
-- _TODO: Different rendering modes_
-
+* Scriptable Tiles, allows
+* Tile Editor
+	* Customisable Tools
+    * **TODO:** Prper Undo/Redo
+* Different rendering modes
+	* Single Sprites
+    * **TODO:** Single Quad
+    * **TODO:** Multiple Quads
+    * **TODO:** Chunked Quads
 
 !["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
 
