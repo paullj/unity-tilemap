@@ -34,11 +34,25 @@ namespace toinfiniityandbeyond.Tilemapping
 		public virtual string Description { get { return string.Empty; } }
 
 		/// <summary>
-		/// Called by the tilemap to paint tiles
+		/// Called by the tilemap when the left click is held down
 		/// </summary>
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public abstract bool Use (Coordinate point, ScriptableTile tile, TileMap map);
+		public abstract bool OnClick (Point point, ScriptableTile tile, TileMap map);
+		/// <summary>
+		/// Called by the tilemap when the left click is initially pressed
+		/// </summary>
+		/// <param name="point">Where you want to use the tool</param>
+		/// <param name="tile">The ScriptableTile you want to use</param>
+		/// <param name="map">What you want to use the tool on</param>
+		public abstract bool OnClickDown (Point point, ScriptableTile tile, TileMap map);
+		/// <summary>
+		/// Called by the tilemap when the left click is let go of
+		/// </summary>
+		/// <param name="point">Where you want to use the tool</param>
+		/// <param name="tile">The ScriptableTile you want to use</param>
+		/// <param name="map">What you want to use the tool on</param>
+		public abstract bool OnClickUp (Point point, ScriptableTile tile, TileMap map);
 	}
 }

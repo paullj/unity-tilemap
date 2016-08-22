@@ -50,7 +50,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
 			if (tile == null || map == null)
 				return false;
@@ -62,7 +62,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				for (int y = -correctedRadius; y <= correctedRadius; y++)
 				{
-					Coordinate offsetPoint = point + new Coordinate (x, y);
+					Point offsetPoint = point + new Point (x, y);
 			
 						if (shape == BrushShape.Circle) {
 							Vector2 delta = (Vector2)(offsetPoint - point);
@@ -77,6 +77,17 @@ namespace toinfiniityandbeyond.Tilemapping
 				}
 			}
 			return result;
+		}
+
+		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
+		{
+			return OnClick(point, tile, map);
+		}
+
+		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
+		{
+			map.UpdateTileMap ();
+			return false;
 		}
 	}
 }

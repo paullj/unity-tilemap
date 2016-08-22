@@ -17,7 +17,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public override KeyCode Shortcut { get { return KeyCode.E; } }
 		public override string Description { get { return "Sets the painted tile to nothing"; } }
 
-		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
+		public override bool OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
 			if (tile == null && map == null)
 				return false;
@@ -29,7 +29,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				for (int y = -correctedRadius; y <= correctedRadius; y++)
 				{
-					Coordinate offsetPoint = point + new Coordinate (x, y);
+					Point offsetPoint = point + new Point (x, y);
 
 					if (map.SetTileAt (offsetPoint, null))
 					{
@@ -38,6 +38,17 @@ namespace toinfiniityandbeyond.Tilemapping
 				}
 			}
 			return result;
+		}
+
+		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
+		{
+			return OnClick(point, tile, map);
+		}
+
+		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
+		{
+			map.UpdateTileMap ();
+			return false;
 		}
 	}
 }

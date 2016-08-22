@@ -10,8 +10,8 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public abstract bool IsValid { get; }
 
-		public abstract Sprite GetSprite (TileMap tilemap, Coordinate position = default (Coordinate));
-		public abstract Texture2D GetTexture (TileMap tilemap, Coordinate position = default (Coordinate));
-		public abstract Color [] GetColors (TileMap tilemap, Coordinate position = default (Coordinate));
+		public abstract Sprite GetSprite (TileMap tilemap = null, Point position = default (Point));
+		public abstract Color [] GetColors (TileMap tilemap = null, Point position = default (Point));
+		public abstract Texture2D GetTexture (TileMap tilemap = null, Point position = default (Point));
 	}
 }

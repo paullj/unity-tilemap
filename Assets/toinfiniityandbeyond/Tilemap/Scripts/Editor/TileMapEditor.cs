@@ -13,8 +13,14 @@ namespace toinfiniityandbeyond.Tilemapping
 	[CustomEditor (typeof (TileMap)), CanEditMultipleObjects]
 	partial class TileMapEditor : Editor
 	{
+		[MenuItem("GameObject/2D Object/TileMap")]
+		private static void CreateTileMapGameObject()
+		{
+			GameObject tileObject = new GameObject ("New TileMap", typeof(TileMap), typeof(TileRenderer));
+		}
+
+
 		private TileMap tileMap;
-		private bool IsInEditMode = false;
 
 		partial void OnInspectorEnable ();
 		partial void OnInspectorDisable ();
@@ -24,8 +30,6 @@ namespace toinfiniityandbeyond.Tilemapping
 		private void OnEnable ()
 		{
 			tileMap = (TileMap)target;
-			
-			IsInEditMode = EditorPrefs.GetBool (tileMap.GetInstanceID()+"_IsInEditMode", false);
 
 			OnInspectorEnable ();
 			OnSceneEnable ();
@@ -33,8 +37,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		private void OnDisable ()
 		{
-			EditorPrefs.SetBool (tileMap.GetInstanceID()+"_IsInEditMode", IsInEditMode);
-
 			OnInspectorDisable ();
 			OnSceneDisable ();
 		}

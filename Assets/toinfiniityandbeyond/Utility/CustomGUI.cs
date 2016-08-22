@@ -4,7 +4,7 @@ using UnityEditor;
 using System;
 using System.Reflection;
 
-namespace toinfiniityandbeyond.Utility
+namespace toinfiniityandbeyond.UI
 {
 	public static class CustomGUILayout
 	{
@@ -40,7 +40,35 @@ namespace toinfiniityandbeyond.Utility
 		{
 			Splitter (thickness, CustomStyles.splitter);
 		}
-		
+		public static void Link (string text, string URL, params GUILayoutOption [] options)
+		{
+			GUILayout.Label (text, options);
+			Rect r = GUILayoutUtility.GetLastRect ();
+			if (Event.current.type == EventType.MouseUp && r.Contains (Event.current.mousePosition))
+				Application.OpenURL (URL);
+		}
+
+		public static void Link (string text, string URL, GUIStyle style, params GUILayoutOption [] options)
+		{
+			GUILayout.Label (text, style, options);
+			Rect r = GUILayoutUtility.GetLastRect ();
+			if (Event.current.type == EventType.MouseUp && r.Contains (Event.current.mousePosition))
+				Application.OpenURL (URL);
+		}
+		public static void Link (GUIContent content, string URL, params GUILayoutOption [] options)
+		{
+			GUILayout.Label (content, options);
+			Rect r = GUILayoutUtility.GetLastRect ();
+			if (Event.current.type == EventType.MouseUp && r.Contains (Event.current.mousePosition))
+				Application.OpenURL (URL);
+		}
+		public static void Link(GUIContent content, GUIStyle style,string URL, params GUILayoutOption[] options)
+		{
+			GUILayout.Label (content, style, options);
+			Rect r = GUILayoutUtility.GetLastRect ();
+			if (Event.current.type == EventType.MouseUp && r.Contains (Event.current.mousePosition))
+				Application.OpenURL (URL);
+		}
 	}
 
 	public static class CustomGUI { 
@@ -62,8 +90,10 @@ namespace toinfiniityandbeyond.Utility
 	public static class CustomStyles
 	{
 		public static readonly GUIStyle splitter;
+		public static readonly GUIStyle wrappedLabel;
 		public static readonly GUIStyle centerMiniLabel;
 		public static readonly GUIStyle leftBoldLabel;
+		public static readonly GUIStyle leftMiniLabel;
 		public static readonly GUIStyle centerBoldLabel;
 		public static readonly GUIStyle centerWhiteBoldLabel;
 		public static readonly GUIStyle centerWhiteMiniLabel;
@@ -87,13 +117,16 @@ namespace toinfiniityandbeyond.Utility
 			leftBoldLabel.alignment = TextAnchor.MiddleLeft;
 			leftBoldLabel.wordWrap = true;
 
+			leftMiniLabel = new GUIStyle (EditorStyles.miniLabel);
+			leftMiniLabel.alignment = TextAnchor.MiddleLeft;
+			leftMiniLabel.wordWrap = true;
+
 			centerBoldLabel = new GUIStyle (EditorStyles.boldLabel);
 			centerBoldLabel.alignment = TextAnchor.MiddleCenter;
 			centerBoldLabel.wordWrap = true;
 
-			centerMiniLabel = new GUIStyle (EditorStyles.miniLabel);
-			centerMiniLabel.alignment = TextAnchor.MiddleCenter;
-			centerMiniLabel.wordWrap = true;
+			wrappedLabel = new GUIStyle (EditorStyles.label);
+			wrappedLabel.wordWrap = true;
 		}
 	}
 }

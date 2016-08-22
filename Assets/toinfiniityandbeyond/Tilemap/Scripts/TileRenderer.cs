@@ -8,7 +8,7 @@ namespace toinfiniityandbeyond.Tilemapping
 	{
 		public Color color;
 		public Material material;
-		public enum MeshType { Sprites, SingleQuad, MultipleQuads }
+		public enum MeshType { Sprites, SingleQuad, MultipleQuads, ChunkedQuads }
 		public MeshType meshType;
 
 		[Space, toinfiniityandbeyond.SortingLayer]
@@ -22,12 +22,19 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		private void Reset ()
 		{
+			if(!tileMap)
+				tileMap = GetComponent<TileMap> ();
+
 			color = Color.white;
 			material = new Material (Shader.Find ("Sprites/Default"));
+
+			Resize (tileMap.Width, tileMap.Height);
+			Rebuild ();
 		}
 		private void OnEnable ()
 		{
-			tileMap = GetComponent<TileMap> ();
+			if(!tileMap)
+				tileMap = GetComponent<TileMap> ();
 
 			tileMap.OnTileChanged += UpdateTile;
 			tileMap.OnTilemapRebuild += Resize;
@@ -40,11 +47,14 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		public void Resize(int width, int height)
 		{
-			foreach(SpriteRenderer sprite in spriteMap)
-			{
-				Destroy (sprite.gameObject);
+			if (spriteMap != null && spriteMap.Length > 0) {
+				foreach (SpriteRenderer sprite in spriteMap) {
+					if (!sprite)
+						continue;
+					DestroyImmediate (sprite.gameObject);
+				}
 			}
-			spriteMap = new SpriteRenderer [width * height];
+			spriteMap = new SpriteRenderer [tileMap.Width * tileMap.Height];
 			/*SpriteRenderer [,] old = new SpriteRenderer [w, h];
 			for (int x = 0; x < w; x++)
 			{
@@ -84,7 +94,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			SpriteRenderer current = spriteMap [index];
 			if(current == null)
 			{
-				current = new GameObject (string.Format ("[{0}, {1}]", x, y)).AddComponent<SpriteRenderer>();
+				current = new GameObject (string.Format ("[{0}, {1}]", x, y), typeof(PolygonCollider2D)).AddComponent<SpriteRenderer>();
 				current.transform.position = new Vector2 (x, y);
 				current.transform.localScale = Vector2.one;
 				current.transform.SetParent(transform);
@@ -92,11 +102,17 @@ namespace toinfiniityandbeyond.Tilemapping
 
 				current.sharedMaterial = material;
 				current.color = color;
-
 				spriteMap [index] = current;
 			}
 			ScriptableTile tile = tileMap.GetTileAt (x, y);
-			current.sprite = tile ? tile.GetSprite (tileMap, new Coordinate(x, y)) : null;
+
+			if(current.GetComponent<PolygonCollider2D> ())
+				DestroyImmediate(current.GetComponent<PolygonCollider2D> ());
+
+			current.sprite = tile ? tile.GetSprite (tileMap, new Point(x, y)) : null;
+
+			if (current.sprite)
+				current.gameObject.AddComponent<PolygonCollider2D> ();
 		}
 
 		private void Build (int width, int height, ScriptableTile [] map)
@@ -198,7 +214,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				for (int y = 0; y < height; y++)
 				{
 					BaseTile currentTile = map [x + y * width];
-					Color [] colours = (currentTile ? currentTile.GetColors (tileMap, new Coordinate (x, y)) :
+					Color [] colours = (currentTile ? currentTile.GetColors (tileMap, new Point (x, y)) :
 						Enumerable.Repeat (Color.clear, 16 * 16).ToArray ());
 
 					mapTexture.SetPixels (x * 16, y * 16, 16, 16, colours);

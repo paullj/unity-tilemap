@@ -7,71 +7,82 @@ namespace toinfiniityandbeyond.Tilemapping
 	[System.Serializable]
 	public class Fill : ScriptableTool
 	{
-		//Public variables automatically get exposed in the tile editor
-		
+		//An empty constructor
 		public Fill () : base()
 		{
-			//You can set any defaults for variables here
+
 		}
-		
+		//Sets the shortcut key to 'F'
 		public override KeyCode Shortcut
 		{
 			get { return KeyCode.F; }
 		}
-		
+		//Sets the tooltip description
 		public override string Description
 		{
 			get { return "A flood fill tool"; }
 		}
-
-		
-		//Called when you left click on a tile map when in edit mode
-		public override bool Use (Coordinate point, ScriptableTile tile, TileMap map)
+		//Called when the left mouse button is held down
+		public override bool OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
+			return false;
+		}
+		//Called when the left mouse button is initially held down
+		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
+		{
+			//Return if the tilemap is null/empty
+			if (map == null)
+				return false;
+			//Gets the tile where you clicked
 			ScriptableTile start = map.GetTileAt(point);
-			if (start == null || tile == null)
-				return true;
-
-			Queue<Coordinate> open = new Queue<Coordinate> ();
-			List<Coordinate> closed = new List<Coordinate> ();
-		
-			//If we've iterated through the whole map then we've done something wrong
-			int maxLoops = map.Width * map.Height;
-
+			//Return if ther tile specified is null
+			if (tile == null)
+				return false;
+			//The queue of points that need to be changed to the specified tile
+			Queue<Point> open = new Queue<Point> ();
+			//The list of points already changed to the specified tile
+			List<Point> closed = new List<Point> ();
+			//A number larger than the amount of tiles available
+			int maxLoops = map.Width * map.Height * 10;
+			
+			//Add the specified point to the open queue
 			open.Enqueue (point);
+			//As long as there are items in the queue, keep this running
 			while(open.Count > 0) 
 			{
+				//Decrement the max loops value
 				maxLoops--;
+				//If we've executed this code more than the max loops then we've done something wrong :/
 				if (maxLoops <= 0) {
 					Debug.LogError ("Fill tool, max loops reached!");
 					return false;
 				}
 
-				Coordinate c = open.Dequeue ();
-				ScriptableTile t = map.GetTileAt(c);
-				if((t == null && start == null) || t.ID == start.ID)
-				{
-					closed.Add (c);
+				Point p = open.Dequeue ();
+				if (closed.Contains (p))
+					continue;
 
-					ScriptableTile u = map.GetTileAt(c.Up);
-					ScriptableTile r = map.GetTileAt(c.Right);
-					ScriptableTile d = map.GetTileAt(c.Down);
-					ScriptableTile l = map.GetTileAt(c.Left);
+				closed.Add (p);
+				ScriptableTile t = map.GetTileAt(p);
 
-					if (u && u != tile && !closed.Contains(c.Up)) 
-						open.Enqueue (c.Up);
-					if (r && r != tile && !closed.Contains(c.Right)) 
-						open.Enqueue (c.Right);
-					if (d && d != tile && !closed.Contains(c.Down)) 
-						open.Enqueue (c.Down);
-					if (l && l != tile && !closed.Contains(c.Left)) 
-						open.Enqueue (c.Left);
+				if (!map.IsInBounds (p) || t != start)
+					continue;
+			
+				open.Enqueue (p.Up);
+				open.Enqueue (p.Right);
+				open.Enqueue (p.Down);
+				open.Enqueue (p.Left);
 
-					map.SetTileAt (c, tile);
-				}
+				map.SetTileAt (p, tile);
 			}
 
 			return true;
+		}
+
+		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
+		{
+			map.UpdateTileMap ();
+			return false;
 		}
 	}
 }

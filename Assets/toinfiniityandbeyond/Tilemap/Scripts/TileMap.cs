@@ -8,12 +8,6 @@ namespace toinfiniityandbeyond.Tilemapping
 	public class TileMap : MonoBehaviour
 	{
 		[SerializeField]
-		private bool debugMode;
-
-		public ScriptableTile primaryTile;
-		public ScriptableTile secondaryTile;
-
-		[SerializeField]
 		private int width = 20, height = 20;
 		[SerializeField]
 		private ScriptableTile [] map = new ScriptableTile [0];
@@ -23,7 +17,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
-		//public BaseTile [] Map { get { return map; } set { map = value; } }
 
 		public void Resize ()
 		{
@@ -54,15 +47,18 @@ namespace toinfiniityandbeyond.Tilemapping
 		//	width = nWidth;
 		//	height = nHeight;
 		}
-
-		private bool IsInBounds(int x, int y)
+		public bool IsInBounds (Point point)
+		{
+			return IsInBounds(point.x, point.y);
+		}
+		public bool IsInBounds(int x, int y)
 		{
 			return (x >= 0 && x < width && y >= 0 && y < height);
 		}
-		private Coordinate WorldPointToCoordinate (Vector2 worldPoint, bool clamp = false)
+		private Point WorldPositionToPoint (Vector2 worldPosition, bool clamp = false)
 		{
-			Coordinate offset = (Coordinate)transform.position;
-			Coordinate point = (Coordinate)worldPoint;
+			Point offset = (Point)transform.position;
+			Point point = (Point)worldPosition;
 
 			int x = point.x - offset.x;
 			int y = point.y - offset.y;
@@ -72,16 +68,16 @@ namespace toinfiniityandbeyond.Tilemapping
 				x = Mathf.Clamp (x, 0, width - 1);
 				y = Mathf.Clamp (y, 0, height - 1);
 			}
-			return new Coordinate (x, y);
+			return new Point (x, y);
 		}
 
-		public ScriptableTile GetTileAt (Vector2 worldPoint)
+		public ScriptableTile GetTileAt (Vector2 worldPosition)
 		{
-			return GetTileAt (WorldPointToCoordinate(worldPoint));
+			return GetTileAt (WorldPositionToPoint(worldPosition));
 		}
-		public ScriptableTile GetTileAt (Coordinate coordinate)
+		public ScriptableTile GetTileAt (Point point)
 		{
-			return GetTileAt (coordinate.x, coordinate.y);
+			return GetTileAt (point.x, point.y);
 		}
 		public ScriptableTile GetTileAt (int x, int y)
 		{
@@ -96,13 +92,13 @@ namespace toinfiniityandbeyond.Tilemapping
 			return map [x + y * width];
 		}
 
-		public bool SetTileAt (Vector2 worldPoint, ScriptableTile to)
+		public bool SetTileAt (Vector2 worldPosition, ScriptableTile to)
 		{
-			return SetTileAt (WorldPointToCoordinate (worldPoint), to);
+			return SetTileAt (WorldPositionToPoint (worldPosition), to);
 		}
-		public bool SetTileAt (Coordinate coordinate, ScriptableTile to)
+		public bool SetTileAt (Point point, ScriptableTile to)
 		{
-			return SetTileAt (coordinate.x, coordinate.y, to);
+			return SetTileAt (point.x, point.y, to);
 		}
 		public bool SetTileAt (int x, int y, ScriptableTile to)
 		{
@@ -124,8 +120,32 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 			return false;
 		}
-
+		public void UpdateTileAt (Point point)
+		{
+			OnTileChanged.Invoke (point.x, point.y);
+		}
+		public void UpdateTileAt (int x, int y)
+		{
+			OnTileChanged.Invoke (x, y);
+		}
+		public void UpdateTileMap ()
+		{
+			for (int x = 0; x < Width; x++)
+			{
+				for (int y = 0; y < Height; y++)
+				{
+					UpdateTileAt (x, y);
+				}
+			}
+		}
 #if UNITY_EDITOR
+		[SerializeField]
+		private bool debugMode;
+
+		public ScriptableTile primaryTile;
+		public ScriptableTile secondaryTile;
+
+		public bool IsInEditMode = false;
 		public Rect toolbarWindowPosition;
 		public Rect tilePickerWindowPosition;
 		public Vector2 tilePickerScrollView;
@@ -141,7 +161,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public Vector3 position;
 		public Quaternion rotation;
-
 #endif
 	}
 }

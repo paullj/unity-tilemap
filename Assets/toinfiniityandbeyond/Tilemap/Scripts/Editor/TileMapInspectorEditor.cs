@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
-// For obtaining list of sorting layers.
-using UnityEditorInternal;
-using System.Reflection;
+using toinfiniityandbeyond.UI;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -31,32 +25,20 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			serializedObject.Update ();
 			EditorGUILayout.Space ();
-
-			var boldCentredStyle = EditorStyles.boldLabel;
-			boldCentredStyle.alignment = TextAnchor.MiddleCenter;
-			boldCentredStyle.wordWrap = true;
-
 			EditorGUI.BeginChangeCheck ();
-			IsInEditMode = GUILayout.Toggle (IsInEditMode, "", "Button", GUILayout.Height(EditorGUIUtility.singleLineHeight * 1.5f));
-			GUI.Label (GUILayoutUtility.GetLastRect(), (IsInEditMode ? "Exit" : "Enter") + " Edit Mode", boldCentredStyle);
+			tileMap.IsInEditMode = GUILayout.Toggle (tileMap.IsInEditMode, "", "Button", GUILayout.Height(EditorGUIUtility.singleLineHeight * 1.5f));
+			GUI.Label (GUILayoutUtility.GetLastRect(), (tileMap.IsInEditMode ? "Exit" : "Enter") + " Edit Mode", CustomStyles.centerBoldLabel);
 			
 			if (EditorGUI.EndChangeCheck ())
 			{
-				if (IsInEditMode)
-				{
-					(SceneView.sceneViews [0] as SceneView).in2DMode = true;
-					Tools.hidden = true;
-					Tools.current = Tool.None;
-					OnSceneGUI ();
-				}
+				if (tileMap.IsInEditMode)
+					OnEnterEditMode ();
 				else
-				{
-					Tools.hidden = false;
-					Tools.current = Tool.Move;
-				}
+					OnExitEditMode ();
 			}
 			EditorGUILayout.Space ();
-
+			GUILayout.EndHorizontal ();
+			GUILayout.Label ("Settings", CustomStyles.leftBoldLabel);
 			EditorGUILayout.PropertyField (spDebug);
 			EditorGUI.BeginChangeCheck ();
 			EditorGUILayout.PropertyField (spWidth);
@@ -68,6 +50,19 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			EditorGUILayout.Space ();
 
+			if(GUILayout.Button("Force Refresh"))
+			{
+				tileMap.UpdateTileMap ();
+			}
+			GUILayout.BeginHorizontal ();
+			if (GUILayout.Button ("Import"))
+			{
+
+			}
+			if (GUILayout.Button ("Export"))
+			{
+				
+			}
 
 			serializedObject.ApplyModifiedProperties ();
 		}

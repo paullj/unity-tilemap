@@ -8,25 +8,52 @@ using System.Collections.Generic;
 using UnityEditorInternal;
 using System.Reflection;
 
-using toinfiniityandbeyond.Utility;
+using toinfiniityandbeyond.UI;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
 	partial class TileMapEditor : Editor
 	{
+		Vector3 position;
+
 		partial void OnSceneEnable ()
 		{
 			RefreshScriptableToolCache ();
 			RefreshScriptableTileCache ();
+			EditorApplication.update += Update;
+			Undo.undoRedoPerformed += tileMap.UpdateTileMap;
 		}
 		partial void OnSceneDisable ()
 		{
-
+			EditorApplication.update -= Update;
+			Undo.undoRedoPerformed -= tileMap.UpdateTileMap;
 		}
+		private void Update () {
+			if (tileMap.IsInEditMode) {
+				Selection.activeObject = tileMap;
+				SceneModeUtility.SearchForType (typeof(TileMap));
+			}
+		}
+		private void OnEnterEditMode() {
+			SceneView currentView = SceneView.lastActiveSceneView;
+			currentView.in2DMode = true;
+			currentView.pivot = tileMap.position + new Vector3 (tileMap.Width / 2, tileMap.Height / 2, -10);
+			currentView.size = tileMap.Height + 2;
 
+			Tools.hidden = true;
+			Tools.current = Tool.None;
+			OnSceneGUI ();
+		}
+		private void OnExitEditMode() {
+			SceneModeUtility.SearchForType (null);
+
+			Tools.hidden = false;
+			Tools.current = Tool.Move;
+		}
+		
 		private void OnSceneGUI ()
 		{
-			if (IsInEditMode)
+			if (tileMap.IsInEditMode)
 			{
 				tileMap.toolbarWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tileMap.toolbarWindowPosition, ToolbarWindow, new GUIContent ("Toolbar"), GUILayout.Width (80)));
 
@@ -259,7 +286,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				}
 			}
 
-			
+
 			GUI.DragWindow ();
 		}
 		private void TilepickerWindow (int id, ref ScriptableTile tileToChange)
@@ -388,6 +415,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				if (tileMap.scriptableTileCache [i] == null)
 					toRemove.Add (tileMap.scriptableTileCache [i]);
 			}
+			AssetDatabase.Refresh ();
 			tileMap.scriptableTileCache = tileMap.scriptableTileCache.Except (toRemove).ToList ();
 			string [] guids = AssetDatabase.FindAssets (string.Format ("t:{0}", typeof (ScriptableTile)));
 			for (int i = 0; i < guids.Length; i++)
@@ -437,6 +465,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				if (Event.current.isKey && Event.current.keyCode == tileMap.scriptableToolCache [i].Shortcut)
 				{
+					Event.current.Use ();
 					tileMap.lastSelectedScriptableTool = tileMap.selectedScriptableTool;
 					tileMap.selectedScriptableTool = i;
 				}
@@ -450,18 +479,28 @@ namespace toinfiniityandbeyond.Tilemapping
 		private void HandleMouseEvents ()
 		{
 			Event e = Event.current;
-			Coordinate point = new Coordinate (0, 0);
+			Point point = new Point (0, 0);
 
 			if (GetMousePosition (ref point))
 			{
-				if ( (e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && e.button == 0)
+				if (tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
 				{
-					if (tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
+					if (e.button == 0)
 					{
-						if (tileMap.scriptableToolCache [tileMap.selectedScriptableTool].Use (point, tileMap.primaryTile, tileMap))
+						if (e.type == EventType.MouseDrag)
 						{
-							Undo.RecordObject (tileMap, "Paint Tilemap");
+							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClick (point, tileMap.primaryTile, tileMap);
 						}
+						if (e.type == EventType.MouseDown)
+						{
+							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickDown (point, tileMap.primaryTile, tileMap);
+						}
+						if(e.type == EventType.MouseUp)
+						{
+							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
+						}
+						Undo.RecordObject (tileMap, "paint tiles");
+						EditorUtility.SetDirty (tileMap);
 					}
 				}
 			}
@@ -471,7 +510,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 
 		}
-		private bool GetMousePosition (ref Coordinate point)
+		private bool GetMousePosition (ref Point point)
 		{
 			if (SceneView.currentDrawingSceneView == null)
 				return false;
@@ -482,7 +521,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			float distance;
 			if (plane.Raycast (ray, out distance))
-				point = (Coordinate)(ray.origin + (ray.direction.normalized * distance)- position);
+				point = (Point)(ray.origin + (ray.direction.normalized * distance)- position);
 
 			bool result = (point.x >= 0 && point.x < position.x + tileMap.Width && point.y >= 0 && point.y < tileMap.Height);
 			Handles.color = result ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);

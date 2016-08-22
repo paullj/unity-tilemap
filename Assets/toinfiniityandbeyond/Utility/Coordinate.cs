@@ -1,29 +1,29 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public struct Coordinate
+public struct Point
 {
-	public static Coordinate zero = new Coordinate (0, 0);
-	public static Coordinate one = new Coordinate (1, 1);
+	public static Point zero = new Point (0, 0);
+	public static Point one = new Point (1, 1);
 
-	public static Coordinate north = new Coordinate (0, 1);
-	public static Coordinate south = new Coordinate (0, -1);
-	public static Coordinate west = new Coordinate (1, 0);
-	public static Coordinate east = new Coordinate (-1, 0);
+	public static Point north = new Point (0, 1);
+	public static Point south = new Point (0, -1);
+	public static Point west = new Point (1, 0);
+	public static Point east = new Point (-1, 0);
 
 	public int x;
 	public int y;
 
-	public Coordinate (int x, int y)
+	public Point (int x, int y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
-	public Coordinate Up { get { return this + north; }}
-	public Coordinate Down { get { return this + south; }}
-	public Coordinate Left { get { return this + west; }}
-	public Coordinate Right { get { return this + east; }}
+	public Point Up { get { return this + north; }}
+	public Point Down { get { return this + south; }}
+	public Point Left { get { return this + west; }}
+	public Point Right { get { return this + east; }}
 
 	public override string ToString ()
 	{
@@ -31,47 +31,47 @@ public struct Coordinate
 	}
 	public override bool Equals (object obj)
 	{
-		return obj is Coordinate && this == (Coordinate)obj;
+		return obj is Point && this == (Point)obj;
 	}
 	public override int GetHashCode ()
 	{
 		return x.GetHashCode () ^ y.GetHashCode ();
 	}
 
-	public static explicit operator Coordinate (Vector2 v)
+	public static explicit operator Point (Vector2 v)
 	{
-		return new Coordinate (Mathf.FloorToInt (v.x), Mathf.FloorToInt (v.y));
+		return new Point (Mathf.FloorToInt (v.x), Mathf.FloorToInt (v.y));
 	}
-	public static explicit operator Coordinate (Vector3 v)
+	public static explicit operator Point (Vector3 v)
 	{
-		return new Coordinate (Mathf.FloorToInt(v.x), Mathf.FloorToInt (v.y));
+		return new Point (Mathf.FloorToInt(v.x), Mathf.FloorToInt (v.y));
 	}
-	public static explicit operator Vector2 (Coordinate c)
+	public static explicit operator Vector2 (Point c)
 	{
 		return new Vector2 (c.x, c.y);
 	}
-	public static explicit operator Vector3 (Coordinate c)
+	public static explicit operator Vector3 (Point c)
 	{
 		return new Vector3 (c.x, c.y);
 	}
-	public static Coordinate operator + (Coordinate a, Coordinate b)
+	public static Point operator + (Point a, Point b)
 	{
-		return new Coordinate (a.x + b.x, a.y + b.y);
+		return new Point (a.x + b.x, a.y + b.y);
 	}
-	public static Coordinate operator - (Coordinate a, Coordinate b)
+	public static Point operator - (Point a, Point b)
 	{
-		return new Coordinate (a.x - b.x, a.y - b.y);
+		return new Point (a.x - b.x, a.y - b.y);
 	}
-	public static Coordinate operator * (Coordinate a, int b)
+	public static Point operator * (Point a, int b)
 	{
-		return new Coordinate (a.x * b, a.y * b);
+		return new Point (a.x * b, a.y * b);
 	}
 
-	public static bool operator == (Coordinate a, Coordinate b)
+	public static bool operator == (Point a, Point b)
 	{
 		return a.x == b.x && a.y == b.y;
 	}
-	public static bool operator != (Coordinate a, Coordinate b)
+	public static bool operator != (Point a, Point b)
 	{
 		return !(a == b);
 	}

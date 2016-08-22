@@ -7,8 +7,7 @@ namespace toinfiniityandbeyond.Tilemapping
 	[CreateAssetMenu (fileName = "New Tile", menuName = "Tilemap/Tiles/Tile")]
 	public class Tile : ScriptableTile
 	{
-		[SerializeField]
-		private Sprite sprite;
+		public Sprite sprite;
 
 		private Texture2D texture;
 		private Color [] colors;
@@ -32,17 +31,17 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 		}
 
-		public override Sprite GetSprite (TileMap tilemap, Coordinate position = default (Coordinate))
+		public override Sprite GetSprite (TileMap tilemap = null, Point position = default (Point))
 		{
 			return sprite;
 		}
-		public override Texture2D GetTexture (TileMap tilemap, Coordinate position = default (Coordinate))
+		public override Texture2D GetTexture (TileMap tilemap = null, Point position = default (Point))
 		{
-			if (texture == null)
-				RebuildTexture ();
+			//	if (texture == null)
+			//		RebuildTexture ();
 			return texture;
 		}
-		public override Color [] GetColors (TileMap tilemap, Coordinate position = default (Coordinate))
+		public override Color [] GetColors (TileMap tilemap = null, Point position = default (Point))
 		{
 			if (colors.Length == 0)
 				RebuildTexture ();
