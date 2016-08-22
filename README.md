@@ -27,6 +27,7 @@ blah blah blah
 	* **TODO:** Multiple Quads
 	* **TODO:** Chunked Quads
 * **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
+* **TODO:** Colliders
 * **TODO:** Layers
 
 !["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
