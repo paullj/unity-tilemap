@@ -11,7 +11,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public enum MeshType { Sprites, SingleQuad, MultipleQuads, ChunkedQuads }
 		public MeshType meshType;
 
-		[Space, toinfiniityandbeyond.SortingLayer]
+		[Space]
 		public int sortingLayer;
 		public int orderInLayer;
 
