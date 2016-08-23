@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	[CreateAssetMenu (fileName = "New Tile", menuName = "Tilemap/Tiles/Tile")]
-	public class Tile : ScriptableTile
+	[CreateAssetMenu (fileName = "New SimpleTile", menuName = "Tilemap/Tiles/SimpleTile")]
+	public class SimpleTile : ScriptableTile
 	{
 		public Sprite sprite;
 

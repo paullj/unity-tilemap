@@ -24,8 +24,6 @@ namespace toinfiniityandbeyond.Tilemapping {
 		}
 		public override void OnInspectorGUI ()
 		{
-			GUILayout.Space (10);
-
 			EditorGUILayout.HelpBox ("Fill the grid below with tiles in the '4x4' layout. Click the help button for more info.", MessageType.Info);
 			GUILayout.Label ("Sprites:", CustomStyles.leftBoldLabel);
 
@@ -78,8 +76,10 @@ namespace toinfiniityandbeyond.Tilemapping {
 			}
 			GUILayout.EndHorizontal ();
 
-			int controlID = EditorGUIUtility.GetObjectPickerControlID ();
+			GUILayout.Label ("Settings:", CustomStyles.leftBoldLabel);
+			autoTile.defaultIsFull = EditorGUILayout.Toggle ("Default is full", autoTile.defaultIsFull);
 
+			int controlID = EditorGUIUtility.GetObjectPickerControlID ();
 			if (Event.current.commandName == "ObjectSelectorUpdated")
 			{
 				autoTile.bitmaskSprites [controlID] = EditorGUIUtility.GetObjectPickerObject () as Sprite;

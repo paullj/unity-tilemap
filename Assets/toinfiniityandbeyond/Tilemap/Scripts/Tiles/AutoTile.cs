@@ -3,10 +3,11 @@ using UnityEngine;
 namespace toinfiniityandbeyond.Tilemapping
 {
 	//Remember to change these names to something more meaningful!
-	[CreateAssetMenu (fileName = "BitmaskTile", menuName = "Tilemap/Tiles/BitmaskTile")]
+	[CreateAssetMenu (fileName = "AutoTile", menuName = "Tilemap/Tiles/AutoTile")]
 	public class AutoTile : ScriptableTile
 	{
 		public Sprite [] bitmaskSprites = new Sprite[16];
+		public bool defaultIsFull = true;
 
 		private Texture2D texture;
 		private Color [] colors;
@@ -65,19 +66,20 @@ namespace toinfiniityandbeyond.Tilemapping
 			ScriptableTile down = tilemap.GetTileAt (position.Down);
 
 			int index = 0;
-			if (up && up.ID == this.ID)
+
+			if ((!tilemap.IsInBounds (position.Up) && defaultIsFull) || (up && up.ID == this.ID))
 			{
 				index += 1;
 			}
-			if (right && right.ID == this.ID)
+			if ((!tilemap.IsInBounds (position.Right) && defaultIsFull) || (right && right.ID == this.ID))
 			{
 				index += 8;
 			}
-			if (down && down.ID == this.ID)
+			if ((!tilemap.IsInBounds (position.Down) && defaultIsFull) || (down && down.ID == this.ID))
 			{
 				index += 4;
 			}
-			if (left && left.ID == this.ID)
+			if ((!tilemap.IsInBounds (position.Left) && defaultIsFull) || (left && left.ID == this.ID))
 			{
 				index += 2;
 			}

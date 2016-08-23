@@ -4,14 +4,14 @@ using toinfiniityandbeyond.UI;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	[CustomEditor (typeof (Tile))]
+	[CustomEditor (typeof (SimpleTile))]
 	public class TileCustomEditor : ScriptableTileEditor
 	{
-		private Tile tile;
+		private SimpleTile tile;
 
 		private void OnEnable ()
 		{
-			tile = (Tile)target;
+			tile = (SimpleTile)target;
 		}
 		public override void OnInspectorGUI ()
 		{

@@ -14,9 +14,36 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public Action<int, int> OnTileChanged = (x, y) => { };
 		public Action<int, int> OnTilemapRebuild = (width, height) => { };
-
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
+
+		private void Update()
+		{
+			for (int x = 0; x < Width; x++)
+			{
+				for (int y = 0; y < Height; y++)
+				{
+					ScriptableTile tile = GetTileAt(x, y);
+					if (tile && tile.CheckIfCanTick ())
+						UpdateTileAt (x, y);
+				}
+			}
+		}
+		private Point WorldPositionToPoint (Vector2 worldPosition, bool clamp = false)
+		{
+			Point offset = (Point)transform.position;
+			Point point = (Point)worldPosition;
+
+			int x = point.x - offset.x;
+			int y = point.y - offset.y;
+
+			if(clamp)
+			{
+				x = Mathf.Clamp (x, 0, width - 1);
+				y = Mathf.Clamp (y, 0, height - 1);
+			}
+			return new Point (x, y);
+		}
 
 		public void Resize ()
 		{
@@ -54,21 +81,6 @@ namespace toinfiniityandbeyond.Tilemapping
 		public bool IsInBounds(int x, int y)
 		{
 			return (x >= 0 && x < width && y >= 0 && y < height);
-		}
-		private Point WorldPositionToPoint (Vector2 worldPosition, bool clamp = false)
-		{
-			Point offset = (Point)transform.position;
-			Point point = (Point)worldPosition;
-
-			int x = point.x - offset.x;
-			int y = point.y - offset.y;
-
-			if(clamp)
-			{
-				x = Mathf.Clamp (x, 0, width - 1);
-				y = Mathf.Clamp (y, 0, height - 1);
-			}
-			return new Point (x, y);
 		}
 
 		public ScriptableTile GetTileAt (Vector2 worldPosition)
@@ -138,6 +150,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				}
 			}
 		}
+
 #if UNITY_EDITOR
 		[SerializeField]
 		private bool debugMode;

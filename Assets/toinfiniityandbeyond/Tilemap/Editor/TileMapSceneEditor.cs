@@ -100,8 +100,9 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			string text = "None";
 			Rect secondaryTileRect = new Rect (tileMap.toolbarWindowPosition.width - 5 - tileMap.toolbarWindowPosition.width * 0.4f, 25 + tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f, tileMap.toolbarWindowPosition.width * 0.4f);
-			tileMap.secondaryTilePickerToggle = GUI.Toggle (secondaryTileRect, tileMap.secondaryTilePickerToggle, GUIContent.none, "Button");
+			tileMap.secondaryTilePickerToggle = GUI.Toggle (secondaryTileRect, tileMap.secondaryTilePickerToggle, GUIContent.none, "Label");
 
+			GUI.DrawTexture (secondaryTileRect, new Texture2D(16, 16));
 			GUI.contentColor = Color.black;
 			if (tileMap.secondaryTile)
 			{
@@ -112,10 +113,11 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.Label (secondaryTileRect, text, CustomStyles.centerWhiteMiniLabel);
 
 			Rect primaryTileRect = new Rect (5, 25, tileMap.toolbarWindowPosition.width * 0.6f, tileMap.toolbarWindowPosition.width * 0.6f);
-			tileMap.primaryTilePickerToggle = GUI.Toggle (primaryTileRect, tileMap.primaryTilePickerToggle, GUIContent.none, "Button");
+			tileMap.primaryTilePickerToggle = GUI.Toggle (primaryTileRect, tileMap.primaryTilePickerToggle, GUIContent.none, "Label");
 
 			text = "None";
 
+			GUI.DrawTexture (primaryTileRect, new Texture2D(16, 16));
 			GUI.contentColor = Color.black;
 			if (tileMap.primaryTile)
 			{
@@ -312,11 +314,12 @@ namespace toinfiniityandbeyond.Tilemapping
 
 						if (index < 0)
 						{
-							if (GUILayout.Button (GUIContent.none, GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
+							if (GUILayout.Button (GUIContent.none, "Label", GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
 							{
 								tileToChange = null;
 								tileMap.primaryTilePickerToggle = tileMap.secondaryTilePickerToggle = false;
 							}
+							GUI.DrawTexture (GUILayoutUtility.GetLastRect (), new Texture2D(16, 16));
 							GUI.Label (GUILayoutUtility.GetLastRect(), "None", CustomStyles.centerBoldLabel);
 						}
 
@@ -325,7 +328,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
 						GUI.color = tileMap.scriptableTileCache [index].IsValid ? Color.white : new Color(1, 0.5f, 0.5f);
 
-						if (GUILayout.Button (GUIContent.none, GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
+						if (GUILayout.Button (GUIContent.none, "Label", GUILayout.Height (tileWidth), GUILayout.Width (tileWidth)))
 						{
 							if (tileMap.scriptableTileCache [index].IsValid)
 							{
@@ -343,6 +346,7 @@ namespace toinfiniityandbeyond.Tilemapping
 					
 						Rect buttonRect = GUILayoutUtility.GetLastRect ();
 						string tileText = "...";
+						GUI.DrawTexture (buttonRect, new Texture2D(16, 16));
 						if (tileMap.scriptableTileCache [index].IsValid)
 						{
 							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetTexture (tileMap));
