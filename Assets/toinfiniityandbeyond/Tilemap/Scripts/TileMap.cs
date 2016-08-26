@@ -12,10 +12,42 @@ namespace toinfiniityandbeyond.Tilemapping
 		[SerializeField]
 		private ScriptableTile [] map = new ScriptableTile [0];
 
+		private bool CurrentOperation = false;
+		private List<ChangeElement> CurrentEdit;
+		private Timeline timeline;
+
 		public Action<int, int> OnTileChanged = (x, y) => { };
 		public Action<int, int> OnTilemapRebuild = (width, height) => { };
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
+
+
+		public void undo()
+		{
+			if (timeline == null)
+				return;
+			List<ChangeElement> changesToRevert = timeline.undo ();
+
+			foreach (var c in changesToRevert) {
+				map [c.x + c.y * width] = c.from;
+			}
+
+			UpdateTileMap ();
+		}
+
+		public void redo()
+		{
+			if (timeline == null)
+				return;
+			List<ChangeElement> changesToRevert = timeline.redo ();
+
+			foreach (var c in changesToRevert) {
+				map [c.x + c.y * width] = c.to;
+			}
+
+			UpdateTileMap ();
+		}
+
 
 		private void Update()
 		{
@@ -29,6 +61,12 @@ namespace toinfiniityandbeyond.Tilemapping
 				}
 			}
 		}
+
+		private void Start()
+		{
+			timeline = new Timeline ();
+		}
+
 		private Point WorldPositionToPoint (Vector2 worldPosition, bool clamp = false)
 		{
 			Point offset = (Point)transform.position;
@@ -128,6 +166,9 @@ namespace toinfiniityandbeyond.Tilemapping
 				if (debugMode)
 					Debug.LogFormat ("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
 
+				currentEdit.Add (new ChangeElement (x, y, from, to));
+
+
 				return true;
 			}
 			return false;
@@ -149,6 +190,27 @@ namespace toinfiniityandbeyond.Tilemapping
 					UpdateTileAt (x, y);
 				}
 			}
+		}
+
+		public void BeginOperation ()
+		{
+			CurrentOperation = true;
+			CurrentEdit = new List<ChangeElement> ();
+			Debug.Log ("Starting Operation");
+		}
+
+		public void FinishOperation ()
+		{
+			CurrentOperation = false;
+			if (timeline == null)
+				timeline = new Timeline ();
+			timeline.pushChanges (currentEdit);
+			Debug.Log ("Finishing Operation");
+		}
+
+		public bool OperationInProgress ()
+		{
+			return CurrentOperation;
 		}
 
 #if UNITY_EDITOR

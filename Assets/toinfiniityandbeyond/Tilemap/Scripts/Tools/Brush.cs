@@ -55,6 +55,11 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (tile == null || map == null)
 				return false;
 
+			//If we haven't already started an operation, start one now
+			//This is for undo/ redo support
+			if (!map.OperationInProgress())
+				map.BeginOperation ();
+
 			int correctedRadius = radius - 1;
 
 			bool result = false;
@@ -81,11 +86,13 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
 		{
+			map.BeginOperation ();
 			return OnClick(point, tile, map);
 		}
 
 		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
 		{
+			map.FinishOperation ();
 			map.UpdateTileMap ();
 			return false;
 		}

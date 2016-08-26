@@ -16,6 +16,8 @@ namespace toinfiniityandbeyond.Tilemapping
 	{
 		Vector3 position;
 
+		bool hasUndone;
+
 		partial void OnSceneEnable ()
 		{
 			RefreshScriptableToolCache ();
@@ -143,7 +145,23 @@ namespace toinfiniityandbeyond.Tilemapping
 				tileMap.primaryTile = null;
 				tileMap.secondaryTile = null;
 			}
+
 			GUI.color = Color.white;
+			GUILayout.EndHorizontal ();
+
+			GUILayout.BeginHorizontal ();
+
+			if (GUILayout.Button ("Undo [Z]"))
+			{
+				tileMap.undo ();
+			}
+
+			if (GUILayout.Button ("Redo [R]"))
+			{
+				tileMap.redo ();
+			}
+
+
 			GUILayout.EndHorizontal ();
 
 			CustomGUILayout.Splitter();
@@ -474,6 +492,17 @@ namespace toinfiniityandbeyond.Tilemapping
 					tileMap.selectedScriptableTool = i;
 				}
 			}
+
+			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.Z)
+			{
+				tileMap.undo ();
+			}
+
+			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.R)
+			{
+				tileMap.redo ();
+			}
+
 
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.X)
 			{
