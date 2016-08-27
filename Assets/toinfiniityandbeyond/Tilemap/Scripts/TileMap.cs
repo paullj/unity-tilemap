@@ -166,7 +166,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				if (debugMode)
 					Debug.LogFormat ("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
 
-				currentEdit.Add (new ChangeElement (x, y, from, to));
+				CurrentEdit.Add (new ChangeElement (x, y, from, to));
 
 
 				return true;
@@ -204,7 +204,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			CurrentOperation = false;
 			if (timeline == null)
 				timeline = new Timeline ();
-			timeline.pushChanges (currentEdit);
+			timeline.pushChanges (CurrentEdit);
 			Debug.Log ("Finishing Operation");
 		}
 
