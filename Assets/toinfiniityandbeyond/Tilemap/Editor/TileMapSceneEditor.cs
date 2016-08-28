@@ -149,22 +149,25 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.color = Color.white;
 			GUILayout.EndHorizontal ();
 
+			CustomGUILayout.Splitter();
+
 			GUILayout.BeginHorizontal ();
 
+			GUI.enabled = tileMap.CanUndo;
 			if (GUILayout.Button ("Undo [Z]"))
 			{
-				tileMap.undo ();
+				tileMap.Undo ();
 			}
-
+			GUI.enabled = tileMap.CanRedo;
 			if (GUILayout.Button ("Redo [R]"))
 			{
-				tileMap.redo ();
+				tileMap.Redo ();
 			}
-
-
+			GUI.enabled = true;
+			
 			GUILayout.EndHorizontal ();
-
 			CustomGUILayout.Splitter();
+
 
 			GUILayout.Label ("Tools", CustomStyles.leftBoldLabel);
 			EditorGUILayout.HelpBox ("[RMB] to toggle last tool", MessageType.Info, true);
@@ -483,6 +486,22 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void HandleShortcutEvents()
 		{
+
+			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.Z)
+			{
+				tileMap.Undo ();
+			}
+
+			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.R)
+			{
+				tileMap.Redo ();
+			}
+
+			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.X)
+			{
+				Swap <ScriptableTile>(ref tileMap.primaryTile, ref tileMap.secondaryTile);
+			}
+		
 			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 			{
 				if (Event.current.isKey && Event.current.keyCode == tileMap.scriptableToolCache [i].Shortcut)
@@ -491,22 +510,6 @@ namespace toinfiniityandbeyond.Tilemapping
 					tileMap.lastSelectedScriptableTool = tileMap.selectedScriptableTool;
 					tileMap.selectedScriptableTool = i;
 				}
-			}
-
-			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.Z)
-			{
-				tileMap.undo ();
-			}
-
-			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.R)
-			{
-				tileMap.redo ();
-			}
-
-
-			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.X)
-			{
-				Swap <ScriptableTile>(ref tileMap.primaryTile, ref tileMap.secondaryTile);
 			}
 		}
 		private void HandleMouseEvents ()
@@ -532,7 +535,6 @@ namespace toinfiniityandbeyond.Tilemapping
 						{
 							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
 						}
-						Undo.RecordObject (tileMap, "paint tiles");
 						EditorUtility.SetDirty (tileMap);
 					}
 				}

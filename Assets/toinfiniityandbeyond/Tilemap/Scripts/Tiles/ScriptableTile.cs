@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -20,18 +19,26 @@ namespace toinfiniityandbeyond.Tilemapping
 		//Yeah, this is a bad name :/ rename asap
 		public bool CheckIfCanTick ()
 		{
-			if(timeOffset - Time.time > TickRate)
+			//Clearly can't tick
+			if(TickRate <= 0)
+				return false;
+			//If the time it has left till next tick is more than the TickRate, reset the timeOffset
+			if(timeOffset - Time.realtimeSinceStartup > TickRate)
 				timeOffset = 0;
-				
+			//If the current time is more than the (time + TickRate)
 			if(Time.realtimeSinceStartup >= timeOffset)
 			{
+				//Then call Tick and reset the timeOffset
 				timeOffset = Time.time + TickRate;
 				return Tick ();
 			}
+			//By default return false
 			return false;
 		}
+		//Override this function to add global behaviour to a tile type 
 		protected virtual bool Tick()
 		{
+			//Make it return true if you want it to visually update
 			return false;
 		}
 	}
