@@ -47,7 +47,7 @@ Yes. If you want to create your own tools (Like the **Pencil** or **Eyedropper**
 Feel free to contribute, I will accept pull requests if I think it will benefit the tool. If you have any questions contact me (details below).
 
 Special thanks to the following for their contribution:
-* @nickgirardo
+	* [@nickgirardo](nickgirardo)
 
 ## Contact
 If you would like to contact me please do so over twitter :)    
