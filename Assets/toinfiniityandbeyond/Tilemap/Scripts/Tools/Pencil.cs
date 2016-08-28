@@ -27,17 +27,25 @@ namespace toinfiniityandbeyond.Tilemapping
 			//Return if the tilemap is null/empty
 			if (map == null)
 				return false;
+
+			//If we haven't already started an operation, start one now
+			//This is for undo/ redo support
+			if (!map.OperationInProgress())
+				map.BeginOperation ();
+
 			//Set the tile at the specified point to the specified tile
 			return map.SetTileAt (point, tile);
 		}
 		//Called when the left mouse button is initially held down
 		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
 		{
+			map.BeginOperation ();
 			return OnClick(point, tile, map);
 		}
 		//Called when the left mouse button is finally let go
 		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
 		{
+			map.FinishOperation ();
 			map.UpdateTileMap ();
 			return false;
 		}

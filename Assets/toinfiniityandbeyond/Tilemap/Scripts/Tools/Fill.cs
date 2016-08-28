@@ -33,6 +33,10 @@ namespace toinfiniityandbeyond.Tilemapping
 			//Return if the tilemap is null/empty
 			if (map == null)
 				return false;
+
+			//For undo/ redo
+			map.BeginOperation ();
+
 			//Gets the tile where you clicked
 			ScriptableTile start = map.GetTileAt(point);
 			//Return if ther tile specified is null
@@ -81,6 +85,8 @@ namespace toinfiniityandbeyond.Tilemapping
 
 		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
 		{
+			//For undo/ redo
+			map.FinishOperation ();
 			map.UpdateTileMap ();
 			return false;
 		}
