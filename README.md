@@ -3,6 +3,7 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
 [Help](#help)    
+[Contributing](#contributing)
 [Contact](#contact)
 
 ## About
@@ -19,7 +20,7 @@ blah blah blah
 		*  Fill
 		*  Eraser
 		*  Eyedropper
-	* **TODO:** Proper Undo/Redo  
+	* Proper Undo/Redo  
 	* **TODO:** Export/Import to JSON or ScriptableObject
 * Different rendering modes
 	* Single Sprites
@@ -41,6 +42,12 @@ If you want to create your own scriptable tiles (Like the **Tile** or **AutoTile
 
 ### Can I make custom tools?
 Yes. If you want to create your own tools (Like the **Pencil** or **Eyedropper**) then click on _Create > Tilemap > Create C# Tool Script_ and edit like anyother script. Since all tools (even the included ones) inherit from **ScriptableTool** you can also simply create a C# class that inherits from **ScriptableTool**. Any class that inherits **ScriptableTool** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.
+
+## Contributing
+Feel free to contribute, I will accept pull requests if I think it will benefit the tool. If you have any questions contact me (details below).
+
+Special thanks to the following for their contribution:
+	* @nickgirardo
 
 ## Contact
 If you would like to contact me please do so over twitter :)    
