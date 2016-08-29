@@ -31,15 +31,17 @@ namespace toinfiniityandbeyond.Tilemapping
 			Undo.undoRedoPerformed -= tileMap.UpdateTileMap;
 		}
 		private void Update () {
-			if (tileMap.IsInEditMode) {
+			if (tileMap.isInEditMode) {
 				Selection.activeObject = tileMap;
+				SceneView currentView = SceneView.lastActiveSceneView;
+				currentView.in2DMode = true;
+				Tools.current = Tool.None;
 				SceneModeUtility.SearchForType (typeof(TileMap));
 			}
 		}
 		private void OnEnterEditMode() {
 			SceneView currentView = SceneView.lastActiveSceneView;
-			currentView.in2DMode = true;
-			currentView.pivot = tileMap.position + new Vector3 (tileMap.Width / 2, tileMap.Height / 2, -10);
+			currentView.pivot = tileMap.tileMapPosition + new Vector3 (tileMap.Width / 2, tileMap.Height / 2, -10);
 			currentView.size = tileMap.Height + 2;
 
 			Tools.hidden = true;
@@ -55,7 +57,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		
 		private void OnSceneGUI ()
 		{
-			if (tileMap.IsInEditMode)
+			if (tileMap.isInEditMode)
 			{
 				tileMap.toolbarWindowPosition = ClampToScreen (GUILayout.Window (GUIUtility.GetControlID (FocusType.Passive), tileMap.toolbarWindowPosition, ToolbarWindow, new GUIContent ("Toolbar"), GUILayout.Width (80)));
 
@@ -84,16 +86,16 @@ namespace toinfiniityandbeyond.Tilemapping
 				HandleShortcutEvents ();
 				HandleMouseEvents ();
 
-				tileMap.transform.position = tileMap.position;
-				tileMap.transform.rotation = tileMap.rotation;
+				tileMap.transform.position = tileMap.tileMapPosition;
+				tileMap.transform.rotation = tileMap.tileMapRotation;
 				tileMap.transform.localScale = Vector3.one;
 
 				HandleUtility.AddDefaultControl (GUIUtility.GetControlID (FocusType.Passive));
 				SceneView.RepaintAll ();
 			} else
 			{
-				tileMap.position = tileMap.transform.position;
-				tileMap.rotation = tileMap.transform.rotation;
+				tileMap.tileMapPosition = tileMap.transform.position;
+				tileMap.tileMapRotation = tileMap.transform.rotation;
 			}
 			DrawOutline ();
 		}
@@ -170,7 +172,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
 
 			GUILayout.Label ("Tools", CustomStyles.leftBoldLabel);
-			EditorGUILayout.HelpBox ("[RMB] to toggle last tool", MessageType.Info, true);
+			EditorGUILayout.HelpBox ("[RMB] to toggle tool", MessageType.Info, true);
 
 			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
 			{
@@ -459,7 +461,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			float width = tileMap.Width;
 			float height = tileMap.Height;
 
-			Vector3 position = tileMap.position;
+			Vector3 position = tileMap.tileMapPosition;
 
 			Handles.color = Color.gray;
 			for (float i = 1; i < width; i++)
@@ -476,7 +478,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			float width = tileMap.Width;
 			float height = tileMap.Height;
 
-			Vector3 position = tileMap.position;
+			Vector3 position = tileMap.tileMapPosition;
 
 			Handles.color = Color.white;
 			Handles.DrawLine (position, new Vector3 (width + position.x, position.y));
@@ -486,7 +488,6 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void HandleShortcutEvents()
 		{
-
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.Z)
 			{
 				tileMap.Undo ();
@@ -517,11 +518,11 @@ namespace toinfiniityandbeyond.Tilemapping
 			Event e = Event.current;
 			Point point = new Point (0, 0);
 
-			if (GetMousePosition (ref point))
+			if (tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
 			{
-				if (tileMap.selectedScriptableTool >= 0 && tileMap.selectedScriptableTool < tileMap.scriptableToolCache.Count)
+				if (e.button == 0)
 				{
-					if (e.button == 0)
+					if (GetMousePosition (ref point))
 					{
 						if (e.type == EventType.MouseDrag)
 						{
@@ -531,12 +532,12 @@ namespace toinfiniityandbeyond.Tilemapping
 						{
 							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickDown (point, tileMap.primaryTile, tileMap);
 						}
-						if(e.type == EventType.MouseUp)
-						{
-							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
-						}
-						EditorUtility.SetDirty (tileMap);
 					}
+					if(e.type == EventType.MouseUp)
+					{
+						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
+					}
+					EditorUtility.SetDirty (tileMap);
 				}
 			}
 			if ((e.type == EventType.MouseDown) && e.button == 1)
@@ -550,20 +551,25 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (SceneView.currentDrawingSceneView == null)
 				return false;
 
-			Plane plane = new Plane (tileMap.transform.TransformDirection (Vector3.forward), tileMap.position);
+			Plane plane = new Plane (tileMap.transform.TransformDirection (Vector3.forward), tileMap.tileMapPosition);
 			Ray ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
-			Vector3 position = tileMap.position;
+			Vector3 position = tileMap.tileMapPosition;
 
 			float distance;
 			if (plane.Raycast (ray, out distance))
-				point = (Point)(ray.origin + (ray.direction.normalized * distance)- position);
+				point = (Point)(ray.origin + (ray.direction.normalized * distance) - position);
 
-			bool result = (point.x >= 0 && point.x < position.x + tileMap.Width && point.y >= 0 && point.y < tileMap.Height);
+			bool result = (point.x >= 0 && point.x < tileMap.Width && point.y >= 0 && point.y < tileMap.Height);
+			Vector2 tilePosition = (Vector2)position + (Vector2)point;
 			Handles.color = result ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
-			Handles.DrawWireCube ((Vector2)position + (Vector2)point + Vector2.one * 0.5f, Vector2.one);
-			Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
-			Handles.CubeCap (0, (Vector2)position + (Vector2)point + Vector2.one * 0.5f, Quaternion.identity, 1f);
+			Handles.DrawWireCube (tilePosition + Vector2.one * 0.5f, Vector2.one);
 			
+			GUIStyle style = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+        	style.normal.textColor = Handles.color;
+			Handles.Label(tilePosition, point.ToString(), style);
+			
+			Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
+			Handles.CubeCap (0, tilePosition + Vector2.one * 0.5f, Quaternion.identity, 1f);
 			return result;
 		}
 

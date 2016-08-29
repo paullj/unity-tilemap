@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-    [ExecuteInEditMode, AddComponentMenu("Tilemapping/Tilemap"), HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
+    [ExecuteInEditMode, AddComponentMenu("Tilemapping/TileMap"), HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
     public class TileMap : MonoBehaviour
     {
         #region Variables
@@ -17,8 +17,9 @@ namespace toinfiniityandbeyond.Tilemapping
         private List<ChangeElement> CurrentEdit;
         private Timeline timeline;
 
-        public Action<int, int> OnTileChanged = (x, y) => { };
-        public Action<int, int> OnTilemapRebuild = (width, height) => { };
+        public Action<int, int> OnUpdateTileAt = (x, y) => { };
+        public Action OnUpdateTileMap = () => { };
+        public Action<int, int> OnResize = (width, height) => { };
         #endregion
 
         #region Public Methods
@@ -26,12 +27,14 @@ namespace toinfiniityandbeyond.Tilemapping
         public int Height { get { return height; } }
         #endregion
 
-        public bool CanUndo {
-			get { return (timeline != null && timeline.CanUndo); }
-		}
-		public bool CanRedo {
-			get { return (timeline != null && timeline.CanRedo); }
-		}
+        public bool CanUndo
+        {
+            get { return (timeline != null && timeline.CanUndo); }
+        }
+        public bool CanRedo
+        {
+            get { return (timeline != null && timeline.CanRedo); }
+        }
 
         public void Undo()
         {
@@ -42,9 +45,9 @@ namespace toinfiniityandbeyond.Tilemapping
             foreach (var c in changesToRevert)
             {
                 map[c.x + c.y * width] = c.from;
+                UpdateTileAt(c.x, c.y);
+                UpdateTileNeighbours(c.x, c.y, true);
             }
-
-            UpdateTileMap();
         }
 
         public void Redo()
@@ -56,9 +59,9 @@ namespace toinfiniityandbeyond.Tilemapping
             foreach (var c in changesToRevert)
             {
                 map[c.x + c.y * width] = c.to;
+                UpdateTileAt(c.x, c.y);
+                UpdateTileNeighbours(c.x, c.y, true);
             }
-
-            UpdateTileMap();
         }
 
 
@@ -77,6 +80,8 @@ namespace toinfiniityandbeyond.Tilemapping
 
         private void Start()
         {
+            map = new ScriptableTile[width * height];
+            UpdateTileMap();
             timeline = new Timeline();
         }
 
@@ -96,34 +101,28 @@ namespace toinfiniityandbeyond.Tilemapping
             return new Point(x, y);
         }
 
-        public void Resize()
+        public void Resize(int newWidth, int newHeight)
         {
-            if (map.Length == width * height)
+            if ((newWidth <= 0 || newHeight <= 0) || (width == newWidth && height == newHeight))
                 return;
 
-            /*	BaseTile [,] old = new BaseTile [width, height];
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++)
-                    {
-                        int index = x + y * width;
-                        old [x, y] = map [index];
-                    }
-                }
-                */
-            map = new ScriptableTile[width * height];
-            for (int x = 0; x < width; x++)
+            int oldWidth = width, oldHeight = height;
+            ScriptableTile[] oldMap = map;
+
+            map = new ScriptableTile[newWidth * newHeight];
+            width = newWidth;
+            height = newHeight;
+
+            for (int i = 0; i < oldMap.Length; i++)
             {
-                for (int y = 0; y < height; y++)
-                {
-                    int index = x + y * width;
-                    //	if (x < width && y < height)
-                    //		map [index] = old [x, y];
-                }
+                int x = i % oldWidth;
+                int y = i / oldWidth;
+                ScriptableTile tile = oldMap[i];
+                if (tile && IsInBounds(x, y))
+                    SetTileAt(x, y, tile);
             }
-            OnTilemapRebuild.Invoke(width, height);
-            //	width = nWidth;
-            //	height = nHeight;
+
+            OnResize.Invoke(newWidth, newHeight);
         }
         public bool IsInBounds(Point point)
         {
@@ -149,9 +148,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
             int index = x + y * width;
 
-            if (index >= map.Length)
-                Resize();
-
             return map[x + y * width];
         }
 
@@ -174,13 +170,13 @@ namespace toinfiniityandbeyond.Tilemapping
             {
                 map[x + y * width] = to;
 
-                OnTileChanged.Invoke(x, y);
-
                 if (debugMode)
                     Debug.LogFormat("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
 
                 CurrentEdit.Add(new ChangeElement(x, y, from, to));
 
+                UpdateTileAt(x, y);
+                UpdateTileNeighbours(x, y, true);
 
                 return true;
             }
@@ -188,39 +184,52 @@ namespace toinfiniityandbeyond.Tilemapping
         }
         public void UpdateTileAt(Point point)
         {
-            OnTileChanged.Invoke(point.x, point.y);
+            UpdateTileAt(point.x, point.y);
         }
         public void UpdateTileAt(int x, int y)
         {
-            OnTileChanged.Invoke(x, y);
+            OnUpdateTileAt.Invoke(x, y);
+        }
+        public void UpdateTileNeighbours(int x, int y, bool incudeCorners = false)
+        {
+            for (int xx = -1; xx <= 1; xx++)
+            {
+                for (int yy = -1; yy <= 1; yy++)
+                {
+                    if (xx == 0 && yy == 0)
+                        continue;
+
+                    if (!incudeCorners && !(xx == 0 || yy == 0))
+                        continue;
+
+                    if (IsInBounds(x + xx, y + yy))
+                        UpdateTileAt(x + xx, y + yy);
+                }
+            }
         }
         public void UpdateTileMap()
         {
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    UpdateTileAt(x, y);
-                }
-            }
+            OnUpdateTileMap.Invoke();
         }
 
         public void BeginOperation()
         {
-            CurrentOperation = true;
-            CurrentEdit = new List<ChangeElement>();
             if (debugMode)
                 Debug.Log("Starting Operation");
+
+            CurrentOperation = true;
+            CurrentEdit = new List<ChangeElement>();
         }
 
         public void FinishOperation()
         {
+            if (debugMode)
+                Debug.Log("Finishing Operation");
+
             CurrentOperation = false;
             if (timeline == null)
                 timeline = new Timeline();
             timeline.PushChanges(CurrentEdit);
-            if (debugMode)
-                Debug.Log("Finishing Operation");
         }
 
         public bool OperationInProgress()
@@ -228,29 +237,24 @@ namespace toinfiniityandbeyond.Tilemapping
             return CurrentOperation;
         }
 
+        //A cheat-y way of serialising editor variables in the Unity Editor
 #if UNITY_EDITOR
-        [SerializeField]
-        private bool debugMode;
+        public bool debugMode, isInEditMode = false;
 
-        public ScriptableTile primaryTile;
-        public ScriptableTile secondaryTile;
+        public ScriptableTile primaryTile, secondaryTile;
 
-        public bool IsInEditMode = false;
-        public Rect toolbarWindowPosition;
-        public Rect tilePickerWindowPosition;
+        public Rect toolbarWindowPosition, tilePickerWindowPosition;
         public Vector2 tilePickerScrollView;
 
-        public int selectedScriptableTool = -1;
-        public int lastSelectedScriptableTool = -1;
+        public int selectedScriptableTool = -1, lastSelectedScriptableTool = -1;
 
-        public bool primaryTilePickerToggle = false;
-        public bool secondaryTilePickerToggle = false;
+        public bool primaryTilePickerToggle = false, secondaryTilePickerToggle = false;
 
         public List<ScriptableTool> scriptableToolCache = new List<ScriptableTool>();
         public List<ScriptableTile> scriptableTileCache = new List<ScriptableTile>();
 
-        public Vector3 position;
-        public Quaternion rotation;
+        public Vector3 tileMapPosition;
+        public Quaternion tileMapRotation;
 #endif
     }
 }

@@ -50,10 +50,10 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public override bool OnClick (Point point, ScriptableTile tile, TileMap map)
+		public override void OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
 			if (tile == null || map == null)
-				return false;
+				return;
 
 			//If we haven't already started an operation, start one now
 			//This is for undo/ redo support
@@ -62,7 +62,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			int correctedRadius = radius - 1;
 
-			bool result = false;
 			for (int x = -correctedRadius; x <= correctedRadius; x++)
 			{
 				for (int y = -correctedRadius; y <= correctedRadius; y++)
@@ -75,26 +74,14 @@ namespace toinfiniityandbeyond.Tilemapping
 								continue;
 						}
 
-					if (map.SetTileAt (offsetPoint, tile))
-					{
-						result = true;
-					}
+					map.SetTileAt (offsetPoint, tile);
 				}
 			}
-			return result;
 		}
 
-		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
+		public override void OnClickDown (Point point, ScriptableTile tile, TileMap map)
 		{
-			map.BeginOperation ();
-			return OnClick(point, tile, map);
-		}
-
-		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
-		{
-			map.FinishOperation ();
-			map.UpdateTileMap ();
-			return false;
+			OnClick(point, tile, map);
 		}
 	}
 }
