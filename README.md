@@ -12,7 +12,7 @@ This tilemap system is a robust system that allows users to customise the tile t
 * Scriptable tiles, allows custom behaviour. Including:
 	* SimpleTile
     * RandomTile
-	* Autotile
+	* AutoTile
 	* **TODO:** AnimatedTile
 	* **TODO:** ConditionalTile
 * Tile Editor
