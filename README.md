@@ -23,7 +23,7 @@ blah blah blah
 	* Proper Undo/Redo  
 	* **TODO:** Export/Import to JSON or ScriptableObject
 * Different rendering modes
-	* Single Sprites
+	* Sprites
 	* **TODO:** Single Quad
 	* **TODO:** Multiple Quads
 	* **TODO:** Chunked Quads
