@@ -1,4 +1,4 @@
-# Tilemap
+# Unity Tilemap
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
