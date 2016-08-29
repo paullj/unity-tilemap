@@ -4,7 +4,7 @@ A simple yet highly customisable tile mapping tool made for the Unity Engine.
 [About](#about)    
 [Help](#help)    
 [Contributing](#contributing)    
-[Contact](#contact)    
+[Contact](#contact)
 
 ## About
 This tilemap system is a robust system that allows users to customise the tile types and brushes to enable them to be able to easily paint tiles in the Unity Editor as well as in realtime.
