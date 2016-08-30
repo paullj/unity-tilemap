@@ -51,7 +51,8 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void OnExitEditMode() {
 			SceneModeUtility.SearchForType (null);
-			EditorSceneManager.SaveOpenScenes();
+			if(!Application.isPlaying)
+				EditorSceneManager.SaveOpenScenes();
 			Tools.hidden = false;
 			Tools.current = Tool.Move;
 		}
@@ -523,7 +524,8 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				if (e.button == 0)
 				{
-					if (GetMousePosition (ref point))
+					bool isInBounds = GetMousePosition (ref point);
+					if(isInBounds)
 					{
 						if (e.type == EventType.MouseDrag)
 						{
@@ -538,8 +540,25 @@ namespace toinfiniityandbeyond.Tilemapping
 					{
 						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
 						
-						EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-						EditorUtility.SetDirty (tileMap);
+						if(!Application.isPlaying) {
+							EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+							EditorUtility.SetDirty (tileMap);
+						}
+					}
+					List<Point> region = tileMap.scriptableToolCache [tileMap.selectedScriptableTool].GetToolRegion (point, tileMap.primaryTile, tileMap);
+					Handles.color = isInBounds ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
+					Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
+					GUIStyle style = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+					style.normal.textColor = Handles.color;
+					Handles.Label((Vector2)position + (Vector2)point, point.ToString(), style);
+					
+					for(int i = 0; i < region.Count; i++)
+					{
+						point = region[i];
+						Vector2 tilePosition = (Vector2)position + (Vector2)point;
+						
+						//Handles.DrawWireCube (tilePosition + Vector2.one * 0.5f, Vector2.one);
+						Handles.CubeCap (0, tilePosition + Vector2.one * 0.5f, Quaternion.identity, 1f);
 					}
 				}
 			}
@@ -563,16 +582,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				point = (Point)(ray.origin + (ray.direction.normalized * distance) - position);
 
 			bool result = (point.x >= 0 && point.x < tileMap.Width && point.y >= 0 && point.y < tileMap.Height);
-			Vector2 tilePosition = (Vector2)position + (Vector2)point;
-			Handles.color = result ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
-			Handles.DrawWireCube (tilePosition + Vector2.one * 0.5f, Vector2.one);
 			
-			GUIStyle style = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
-        	style.normal.textColor = Handles.color;
-			Handles.Label(tilePosition, point.ToString(), style);
-			
-			Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
-			Handles.CubeCap (0, tilePosition + Vector2.one * 0.5f, Quaternion.identity, 1f);
 			return result;
 		}
 

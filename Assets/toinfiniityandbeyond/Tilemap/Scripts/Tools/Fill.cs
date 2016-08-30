@@ -35,11 +35,26 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			base.OnClickDown(point, tile, map);
 
+			for(int i = 0; i < region.Count; i ++) {
+				Point offsetPoint = region[i];
+				map.SetTileAt (offsetPoint, tile);
+			}
+			region = new List<Point>();
+
+		}
+		public override List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		{
+			if(region.Contains(point))
+				return region;
+
+			region = new List<Point>();
+
 			//Gets the tile where you clicked
 			ScriptableTile start = map.GetTileAt(point);
-			//Return if ther tile specified is null
+			//Return if there tile specified is null
 			if (tile == null)
-				return;
+				return region;
+
 			//The queue of points that need to be changed to the specified tile
 			Queue<Point> open = new Queue<Point> ();
 			//The list of points already changed to the specified tile
@@ -57,7 +72,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				//If we've executed this code more than the max loops then we've done something wrong :/
 				if (maxLoops <= 0) {
 					Debug.LogError ("Fill tool, max loops reached!");
-					return;
+					return region;
 				}
 
 				Point p = open.Dequeue ();
@@ -75,8 +90,9 @@ namespace toinfiniityandbeyond.Tilemapping
 				open.Enqueue (p.Down);
 				open.Enqueue (p.Left);
 
-				map.SetTileAt (p, tile);
+				region.Add(p);
 			}
+			return region;
 		}
 	}
 }

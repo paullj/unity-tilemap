@@ -4,12 +4,11 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-    [ExecuteInEditMode, AddComponentMenu("Tilemapping/TileMap"), HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
+    [ExecuteInEditMode, AddComponentMenu("2D/TileMap"), DisallowMultipleComponent, HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
     public class TileMap : MonoBehaviour
     {
-        #region Variables
-        [SerializeField]
-        private int width, height;
+		[SerializeField]
+        private int width = 25, height = 25;
         [SerializeField]
         private ScriptableTile[] map = new ScriptableTile[0];
 
@@ -20,50 +19,9 @@ namespace toinfiniityandbeyond.Tilemapping
         public Action<int, int> OnUpdateTileAt = (x, y) => { };
         public Action OnUpdateTileMap = () => { };
         public Action<int, int> OnResize = (width, height) => { };
-        #endregion
 
-        #region Public Methods
         public int Width { get { return width; } }
         public int Height { get { return height; } }
-        #endregion
-
-        public bool CanUndo
-        {
-            get { return (timeline != null && timeline.CanUndo); }
-        }
-        public bool CanRedo
-        {
-            get { return (timeline != null && timeline.CanRedo); }
-        }
-
-        public void Undo()
-        {
-            if (timeline == null)
-                return;
-            List<ChangeElement> changesToRevert = timeline.Undo();
-
-            foreach (var c in changesToRevert)
-            {
-                map[c.x + c.y * width] = c.from;
-                UpdateTileAt(c.x, c.y);
-                UpdateTileNeighbours(c.x, c.y, true);
-            }
-        }
-
-        public void Redo()
-        {
-            if (timeline == null)
-                return;
-            List<ChangeElement> changesToRevert = timeline.Redo();
-
-            foreach (var c in changesToRevert)
-            {
-                map[c.x + c.y * width] = c.to;
-                UpdateTileAt(c.x, c.y);
-                UpdateTileNeighbours(c.x, c.y, true);
-            }
-        }
-
 
         private void Update()
         {
@@ -76,15 +34,6 @@ namespace toinfiniityandbeyond.Tilemapping
                         UpdateTileAt(x, y);
                 }
             }
-        }
-
-        private void Reset()
-        {          
-			Resize(25, 25);
-			timeline = new Timeline();
-            CurrentEdit = new List<ChangeElement>();
-
-			UpdateTileMap();
         }
 
         private Point WorldPositionToPoint(Vector2 worldPosition, bool clamp = false)
@@ -102,12 +51,16 @@ namespace toinfiniityandbeyond.Tilemapping
             }
             return new Point(x, y);
         }
-		public void Clear() {
+
+        public void Reset()
+        {          
             map = new ScriptableTile[width * height];
 			timeline = new Timeline();
             CurrentEdit = new List<ChangeElement>();
+
 			UpdateTileMap();
-		}
+        }
+
         public void Resize(int newWidth, int newHeight)
         {
             if ((newWidth <= 0 || newHeight <= 0) || (width == newWidth && height == newHeight))
@@ -175,10 +128,10 @@ namespace toinfiniityandbeyond.Tilemapping
                 from.ID != to.ID))
             {
                 map[x + y * width] = to;
-
-                if (debugMode)
+#if UNITY_EDITOR
+                if (debug)
                     Debug.LogFormat("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
-
+#endif
 				if(CurrentEdit == null) 
 					CurrentEdit = new List<ChangeElement>();
                 CurrentEdit.Add(new ChangeElement(x, y, from, to));
@@ -220,19 +173,59 @@ namespace toinfiniityandbeyond.Tilemapping
             OnUpdateTileMap.Invoke();
         }
 
+ 		public bool CanUndo
+        {
+            get { return (timeline != null && timeline.CanUndo); }
+        }
+        public bool CanRedo
+        {
+            get { return (timeline != null && timeline.CanRedo); }
+        }
+
+        public void Undo()
+        {
+            if (timeline == null)
+                return;
+            List<ChangeElement> changesToRevert = timeline.Undo();
+
+            foreach (var c in changesToRevert)
+            {
+                map[c.x + c.y * width] = c.from;
+                UpdateTileAt(c.x, c.y);
+                UpdateTileNeighbours(c.x, c.y, true);
+            }
+        }
+
+        public void Redo()
+        {
+            if (timeline == null)
+                return;
+            List<ChangeElement> changesToRevert = timeline.Redo();
+
+            foreach (var c in changesToRevert)
+            {
+                map[c.x + c.y * width] = c.to;
+                UpdateTileAt(c.x, c.y);
+                UpdateTileNeighbours(c.x, c.y, true);
+            }
+        }
+
         public void BeginOperation()
         {
-            if (debugMode)
+#if UNITY_EDITOR
+            if (debug)
                 Debug.Log("Starting Operation");
-
+#endif
             CurrentOperation = true;
             CurrentEdit = new List<ChangeElement>();
         }
 
         public void FinishOperation()
         {
-            if (debugMode)
+#if UNITY_EDITOR
+            if (debug)
                 Debug.Log("Finishing Operation");
+#endif
 
             CurrentOperation = false;
             if (timeline == null)
@@ -247,7 +240,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
         //A cheat-y way of serialising editor variables in the Unity Editor
 #if UNITY_EDITOR
-        public bool debugMode, isInEditMode = false;
+        public bool debug, isInEditMode = false;
 
         public ScriptableTile primaryTile, secondaryTile;
 

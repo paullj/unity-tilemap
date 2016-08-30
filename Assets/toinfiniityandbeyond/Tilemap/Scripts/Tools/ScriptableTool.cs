@@ -1,65 +1,56 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-	/// <summary>
-	/// The base class for a ScriptableTool
-	/// </summary>
+	// The base class for a ScriptableTool
 	[Serializable]
 	public abstract class ScriptableTool
 	{
-		/// <summary>
-		/// The default constructor where you can set up default variable values
-		/// </summary>
+		//Public variables will automatically be exposed in the tile editor
+		//This can be very useful, however it only works with some Types including:
+		//
+		//	- bool								- AnimationCurve
+		//	- float								- Color
+		//	- int								- Sprite, Texture2D
+		//	- Vector2, Vector3					- GameObject, Object
+		//	- Enum
+
+		protected List<Point> region = new List<Point>();
+
+		// The default constructor where you can set up default variable values
 		public ScriptableTool ()
 		{
 
 		}
-		/// <summary>
-		/// The name (which is the class name)
-		/// </summary>
+
+		// The name (which is the class name)
 		public string Name { get { return this.GetType ().Name; } }
-		/// <summary>
-		/// Unique ID of this ScriptableBrush
-		/// </summary>
+		// Unique ID of this ScriptableBrush
 		public int ID { get { return Animator.StringToHash (Name); } }
-		/// <summary>
-		/// Small summary on what the ScriptableTool does
-		/// </summary>
+		// Small summary on what the ScriptableTool does
 		public virtual KeyCode Shortcut { get { return KeyCode.None; } }
-		/// <summary>
-		/// Small summary on what the ScriptableTool does
-		/// </summary>
+		// Small summary on what the ScriptableTool does
 		public virtual string Description { get { return string.Empty; } }
 
-		/// <summary>
-		/// Called by the tilemap when the left click is held down
-		/// </summary>
-		/// <param name="point">Where you want to use the tool</param>
-		/// <param name="tile">The ScriptableTile you want to use</param>
-		/// <param name="map">What you want to use the tool on</param>
+		//Called when LMB is held down
 		public abstract void OnClick (Point point, ScriptableTile tile, TileMap map);
-		/// <summary>
-		/// Called by the tilemap when the left click is initially pressed
-		/// </summary>
-		/// <param name="point">Where you want to use the tool</param>
-		/// <param name="tile">The ScriptableTile you want to use</param>
-		/// <param name="map">What you want to use the tool on</param>
+		//Called when LMB is clicked down	
 		public virtual void OnClickDown (Point point, ScriptableTile tile, TileMap map) 
 		{
 			map.BeginOperation ();
 		}
-		/// <summary>
-		/// Called by the tilemap when the left click is let go of
-		/// </summary>
-		/// <param name="point">Where you want to use the tool</param>
-		/// <param name="tile">The ScriptableTile you want to use</param>
-		/// <param name="map">What you want to use the tool on</param>
+		//Called when LMB is released		
 		public virtual void OnClickUp (Point point, ScriptableTile tile, TileMap map) 
 		{
 			map.FinishOperation ();
+		}
+		//The region to draw a tool preview for
+		public virtual List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		{
+			region = new List<Point> { point };
+			return region;
 		}
 	}
 }

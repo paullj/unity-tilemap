@@ -1,58 +1,35 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
 	[Serializable]
-	/// <summary>
-	/// The Brush tool inherits from the abstract class ScriptableTool.
-	/// This means that it is automatically includeded in the tilemap editor
-	/// </summary>
+	// The Brush tool inherits from the abstract class ScriptableTool.
+	// This means that it is automatically included in the tilemap editor
 	public class Brush : ScriptableTool
 	{
-		//Public variables will automatically be exposed in the tile editor
-		//This can be very useful, however it only works with some Types including:
-		//
-		//	- bool								- AnimationCurve
-		//	- float								- Color
-		//	- int								- Sprite, Texture2D
-		//	- Vector2, Vector3					- GameObject, Object
-		//	- Enum
-
 		public int radius;
 		public enum BrushShape { Square, Circle, }
 		public BrushShape shape;
 
-		/// <summary>
-		/// The default constructor where you can set up default variable values
-		/// </summary>
+		// The default constructor where you can set up default variable values
 		public Brush () : base ()
 		{
 			radius = 1;
 			shape = BrushShape.Square;
 		}
 
-		/// <summary>
-		/// Optional override to set a shortcut used in the tile editor
-		/// </summary>
-		/// <value>The KeyCode, default is none. </value>
+		// Optional override to set a shortcut used in the tile editor
 		public override KeyCode Shortcut { get { return KeyCode.B; } }
 
-		/// <summary>
-		/// Optional override to set a description for the tool
-		/// </summary>
-		/// <value>The description, default is nothing.</value>
+		// Optional override to set a description for the tool
 		public override string Description { get { return "A simple brush"; } }
 
-		/// <summary>
-		/// Called by the tilemap editor to paint tiles
-		/// </summary>
-		/// <param name="point">Where you want to use the tool</param>
-		/// <param name="tile">The ScriptableTile you want to use</param>
-		/// <param name="map">What you want to use the tool on</param>
+		// Called by the tilemap editor to paint tiles
 		public override void OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
-			if (tile == null || map == null)
+			if (map == null)
 				return;
 
 			//If we haven't already started an operation, start one now
@@ -60,28 +37,35 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (!map.OperationInProgress())
 				map.BeginOperation ();
 
-			int correctedRadius = radius - 1;
-
-			for (int x = -correctedRadius; x <= correctedRadius; x++)
-			{
-				for (int y = -correctedRadius; y <= correctedRadius; y++)
-				{
-					Point offsetPoint = point + new Point (x, y);
-			
-						if (shape == BrushShape.Circle) {
-							Vector2 delta = (Vector2)(offsetPoint - point);
-							if (delta.sqrMagnitude > radius * radius)
-								continue;
-						}
-
-					map.SetTileAt (offsetPoint, tile);
-				}
+			for(int i = 0; i < region.Count; i ++) {
+				Point offsetPoint = region[i];
+				
+				map.SetTileAt (offsetPoint, tile);
 			}
 		}
 
 		public override void OnClickDown (Point point, ScriptableTile tile, TileMap map)
 		{
 			OnClick(point, tile, map);
+		}
+		public override List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		{
+			region = new List<Point>();
+			int correctedRadius = radius - 1;
+			for (int x = -correctedRadius; x <= correctedRadius; x++)
+			{
+				for (int y = -correctedRadius; y <= correctedRadius; y++)
+				{
+					Point offsetPoint = point + new Point (x, y);
+					if (shape == BrushShape.Circle) {
+						Vector2 delta = (Vector2)(offsetPoint - point);
+						if (delta.sqrMagnitude > correctedRadius * correctedRadius)
+							continue;
+					}
+					region.Add(offsetPoint);
+				}
+			}
+			return region;
 		}
 	}
 }
