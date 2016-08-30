@@ -7,14 +7,20 @@ namespace toinfiniityandbeyond.Tilemapping {
 	public class AutoTileEditor : ScriptableTileEditor
 	{
 		private AutoTile autoTile;
-		private bool emptySpriteWarning;
-
+		
 		private int [,] indexLookup = new int [,]
 		{
 			{ 4, 6, 14 ,12	},
 			{ 5 ,7 ,15, 13	},
 			{ 1 ,3 ,11, 9	},
 			{ 0 ,2 ,10, 8	},
+		};
+		private string [,] symbolLookup = new string [,]
+		{
+			{ "╻", "┏", "┳", "┓" },
+			{ "┃", "┣", "╋", "┫" },
+			{ "╹", "┗", "┻", "┛" },
+			{ "▪", "╺", "━", "╸" },
 		};
 		private void OnEnable()
 		{
@@ -29,7 +35,6 @@ namespace toinfiniityandbeyond.Tilemapping {
 
 			int size = 4;
 			float sizePerButton = EditorGUIUtility.currentViewWidth / size - 15;
-			emptySpriteWarning = false;
 			GUILayout.BeginHorizontal ();
 			for (int x = 0; x < size; x++)
 			{
@@ -70,6 +75,12 @@ namespace toinfiniityandbeyond.Tilemapping {
 					GUIStyle labelStyle = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
 
 					GUI.Label (r, labelText, labelStyle);
+					
+					GUIStyle symbolStyle = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+					symbolStyle.fontSize = 60;
+					symbolStyle.normal.textColor = new Color(1, 1, 1, 0.3f);
+					GUI.Label (r, symbolLookup[y, x], symbolStyle);
+					
 					GUILayout.EndHorizontal ();
 				}
 				GUILayout.EndVertical ();
@@ -77,7 +88,8 @@ namespace toinfiniityandbeyond.Tilemapping {
 			GUILayout.EndHorizontal ();
 
 			GUILayout.Label ("Settings:", CustomStyles.leftBoldLabel);
-			autoTile.defaultIsFull = EditorGUILayout.Toggle ("Default is full", autoTile.defaultIsFull);
+			autoTile.edgesAreFull = EditorGUILayout.Toggle ("Edges are full", autoTile.edgesAreFull);
+			autoTile.onlySameTiles = EditorGUILayout.Toggle ("Only same tiles", autoTile.onlySameTiles);
 
 			int controlID = EditorGUIUtility.GetObjectPickerControlID ();
 			if (Event.current.commandName == "ObjectSelectorUpdated")

@@ -7,7 +7,8 @@ namespace toinfiniityandbeyond.Tilemapping
 	public class AutoTile : ScriptableTile
 	{
 		public Sprite [] bitmaskSprites = new Sprite[16];
-		public bool defaultIsFull = true;
+		public bool onlySameTiles = true;
+		public bool edgesAreFull = false;
 
 		private Texture2D texture;
 		private Color [] colors;
@@ -60,28 +61,30 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (tilemap == null)
 				return bitmaskSprites[15];
 
-			ScriptableTile left = tilemap.GetTileAt (position.Left);
-			ScriptableTile up = tilemap.GetTileAt (position.Up);
-			ScriptableTile right = tilemap.GetTileAt (position.Right);
-			ScriptableTile down = tilemap.GetTileAt (position.Down);
+			ScriptableTile[] tiles = new ScriptableTile[] {
+				tilemap.GetTileAt (position.Up),
+				tilemap.GetTileAt (position.Left),
+				tilemap.GetTileAt (position.Down),
+				tilemap.GetTileAt (position.Right),
+			};
+			int[] bitmasks = new int[] {
+				1, 2, 4, 8
+			};
+			Point[] points = new Point[] {
+				position.Up,
+				position.Left,
+				position.Down,
+				position.Right,
+			};
 
 			int index = 0;
-
-			if ((!tilemap.IsInBounds (position.Up) && defaultIsFull) || (up && up.ID == this.ID))
-			{
-				index += 1;
-			}
-			if ((!tilemap.IsInBounds (position.Right) && defaultIsFull) || (right && right.ID == this.ID))
-			{
-				index += 8;
-			}
-			if ((!tilemap.IsInBounds (position.Down) && defaultIsFull) || (down && down.ID == this.ID))
-			{
-				index += 4;
-			}
-			if ((!tilemap.IsInBounds (position.Left) && defaultIsFull) || (left && left.ID == this.ID))
-			{
-				index += 2;
+			for(int i = 0; i < 4; i++) {
+				bool exists = tiles[i] != null;
+				bool isSame = exists && tiles[i].ID == this.ID;
+				bool isEdge = !tilemap.IsInBounds (points[i]);
+			
+				if((isEdge && edgesAreFull) || (exists && (!onlySameTiles || isSame)))
+					index += bitmasks[i];
 			}
 
 			if (index < bitmaskSprites.Length && bitmaskSprites [index])

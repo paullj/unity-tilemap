@@ -51,13 +51,21 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			if (width != spWidth.intValue || height != spHeight.intValue) {
 				tileMap.Resize (width, height);
+				OnSceneGUI();
 			}
 			EditorGUILayout.Space ();
 
+			GUILayout.Label ("Tools", CustomStyles.leftBoldLabel);
 			if(GUILayout.Button("Force Refresh"))
 			{
 				tileMap.UpdateTileMap ();
 			}
+			if(GUILayout.Button("Clear All Tiles"))
+			{
+				if(EditorUtility.DisplayDialog("Are you sure?", "You cannot undo this action!", "Okay", "Cancel"))
+					tileMap.Clear();
+			}
+			GUILayout.Label ("Import/Export", CustomStyles.leftBoldLabel);
 			GUILayout.BeginHorizontal ();
 			if (GUILayout.Button ("Import"))
 			{

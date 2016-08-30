@@ -9,7 +9,7 @@ namespace toinfiniityandbeyond.Tilemapping
     {
         #region Variables
         [SerializeField]
-        private int width = 20, height = 20;
+        private int width, height;
         [SerializeField]
         private ScriptableTile[] map = new ScriptableTile[0];
 
@@ -78,11 +78,13 @@ namespace toinfiniityandbeyond.Tilemapping
             }
         }
 
-        private void Start()
-        {
-            map = new ScriptableTile[width * height];
-            UpdateTileMap();
-            timeline = new Timeline();
+        private void Reset()
+        {          
+			Resize(25, 25);
+			timeline = new Timeline();
+            CurrentEdit = new List<ChangeElement>();
+
+			UpdateTileMap();
         }
 
         private Point WorldPositionToPoint(Vector2 worldPosition, bool clamp = false)
@@ -100,7 +102,12 @@ namespace toinfiniityandbeyond.Tilemapping
             }
             return new Point(x, y);
         }
-
+		public void Clear() {
+            map = new ScriptableTile[width * height];
+			timeline = new Timeline();
+            CurrentEdit = new List<ChangeElement>();
+			UpdateTileMap();
+		}
         public void Resize(int newWidth, int newHeight)
         {
             if ((newWidth <= 0 || newHeight <= 0) || (width == newWidth && height == newHeight))
@@ -112,6 +119,7 @@ namespace toinfiniityandbeyond.Tilemapping
             map = new ScriptableTile[newWidth * newHeight];
             width = newWidth;
             height = newHeight;
+            OnResize.Invoke(newWidth, newHeight);
 
             for (int i = 0; i < oldMap.Length; i++)
             {
@@ -121,8 +129,6 @@ namespace toinfiniityandbeyond.Tilemapping
                 if (tile && IsInBounds(x, y))
                     SetTileAt(x, y, tile);
             }
-
-            OnResize.Invoke(newWidth, newHeight);
         }
         public bool IsInBounds(Point point)
         {
@@ -173,6 +179,8 @@ namespace toinfiniityandbeyond.Tilemapping
                 if (debugMode)
                     Debug.LogFormat("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
 
+				if(CurrentEdit == null) 
+					CurrentEdit = new List<ChangeElement>();
                 CurrentEdit.Add(new ChangeElement(x, y, from, to));
 
                 UpdateTileAt(x, y);

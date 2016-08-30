@@ -32,7 +32,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				tileMap = GetComponent<TileMap> ();
 
 			tileMap.OnUpdateTileAt += UpdateTileAt;
-			tileMap.OnUpdateTileMap -= UpdateTileMap;
+			tileMap.OnUpdateTileMap += UpdateTileMap;
 			tileMap.OnResize += Resize;
 
 			Resize (tileMap.Width, tileMap.Height);

@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
+
 using System;
 using System.Linq;
-using System.Collections.Generic;
-
-// For obtaining list of sorting layers.
-using UnityEditorInternal;
 using System.Reflection;
+using System.Collections.Generic;
 
 using toinfiniityandbeyond.UI;
 
@@ -23,11 +22,13 @@ namespace toinfiniityandbeyond.Tilemapping
 			RefreshScriptableToolCache ();
 			RefreshScriptableTileCache ();
 			EditorApplication.update += Update;
+
 			Undo.undoRedoPerformed += tileMap.UpdateTileMap;
 		}
 		partial void OnSceneDisable ()
 		{
 			EditorApplication.update -= Update;
+			
 			Undo.undoRedoPerformed -= tileMap.UpdateTileMap;
 		}
 		private void Update () {
@@ -50,7 +51,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		}
 		private void OnExitEditMode() {
 			SceneModeUtility.SearchForType (null);
-
+			EditorSceneManager.SaveOpenScenes();
 			Tools.hidden = false;
 			Tools.current = Tool.Move;
 		}
@@ -536,8 +537,10 @@ namespace toinfiniityandbeyond.Tilemapping
 					if(e.type == EventType.MouseUp)
 					{
 						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
+						
+						EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+						EditorUtility.SetDirty (tileMap);
 					}
-					EditorUtility.SetDirty (tileMap);
 				}
 			}
 			if ((e.type == EventType.MouseDown) && e.button == 1)
