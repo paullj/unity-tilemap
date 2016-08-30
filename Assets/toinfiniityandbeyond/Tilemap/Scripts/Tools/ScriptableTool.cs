@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System;
 
 namespace toinfiniityandbeyond.Tilemapping
@@ -39,20 +40,26 @@ namespace toinfiniityandbeyond.Tilemapping
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public abstract bool OnClick (Point point, ScriptableTile tile, TileMap map);
+		public abstract void OnClick (Point point, ScriptableTile tile, TileMap map);
 		/// <summary>
 		/// Called by the tilemap when the left click is initially pressed
 		/// </summary>
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public abstract bool OnClickDown (Point point, ScriptableTile tile, TileMap map);
+		public virtual void OnClickDown (Point point, ScriptableTile tile, TileMap map) 
+		{
+			map.BeginOperation ();
+		}
 		/// <summary>
 		/// Called by the tilemap when the left click is let go of
 		/// </summary>
 		/// <param name="point">Where you want to use the tool</param>
 		/// <param name="tile">The ScriptableTile you want to use</param>
 		/// <param name="map">What you want to use the tool on</param>
-		public abstract bool OnClickUp (Point point, ScriptableTile tile, TileMap map);
+		public virtual void OnClickUp (Point point, ScriptableTile tile, TileMap map) 
+		{
+			map.FinishOperation ();
+		}
 	}
 }

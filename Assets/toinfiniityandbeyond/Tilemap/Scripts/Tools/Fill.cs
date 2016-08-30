@@ -23,25 +23,23 @@ namespace toinfiniityandbeyond.Tilemapping
 			get { return "A flood fill tool"; }
 		}
 		//Called when the left mouse button is held down
-		public override bool OnClick (Point point, ScriptableTile tile, TileMap map)
+		public override void OnClick (Point point, ScriptableTile tile, TileMap map)
 		{
-			return false;
 		}
 		//Called when the left mouse button is initially held down
-		public override bool OnClickDown (Point point, ScriptableTile tile, TileMap map)
+		public override void OnClickDown (Point point, ScriptableTile tile, TileMap map)
 		{
 			//Return if the tilemap is null/empty
 			if (map == null)
-				return false;
+				return;
 
-			//For undo/ redo
-			map.BeginOperation ();
+			base.OnClickDown(point, tile, map);
 
 			//Gets the tile where you clicked
 			ScriptableTile start = map.GetTileAt(point);
 			//Return if ther tile specified is null
 			if (tile == null)
-				return false;
+				return;
 			//The queue of points that need to be changed to the specified tile
 			Queue<Point> open = new Queue<Point> ();
 			//The list of points already changed to the specified tile
@@ -59,7 +57,7 @@ namespace toinfiniityandbeyond.Tilemapping
 				//If we've executed this code more than the max loops then we've done something wrong :/
 				if (maxLoops <= 0) {
 					Debug.LogError ("Fill tool, max loops reached!");
-					return false;
+					return;
 				}
 
 				Point p = open.Dequeue ();
@@ -79,16 +77,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
 				map.SetTileAt (p, tile);
 			}
-
-			return true;
-		}
-
-		public override bool OnClickUp (Point point, ScriptableTile tile, TileMap map)
-		{
-			//For undo/ redo
-			map.FinishOperation ();
-			map.UpdateTileMap ();
-			return false;
 		}
 	}
 }

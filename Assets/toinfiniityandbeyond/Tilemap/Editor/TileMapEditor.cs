@@ -16,9 +16,8 @@ namespace toinfiniityandbeyond.Tilemapping
 		[MenuItem("GameObject/2D Object/TileMap")]
 		private static void CreateTileMapGameObject()
 		{
-			GameObject tileObject = new GameObject ("New TileMap", typeof(TileMap), typeof(TileRenderer));
+			GameObject tileObject = new GameObject ("New TileMap", typeof(TileMap));
 		}
-
 
 		private TileMap tileMap;
 
