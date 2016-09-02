@@ -11,7 +11,7 @@ This tilemap system is a robust system that allows users to customise the tile t
 ### Features
 * Scriptable tiles, allows custom behaviour. Including:
 	* SimpleTile
-    * RandomTile
+	* RandomTile
 	* AutoTile
 	* **TODO:** AnimatedTile
 	* **TODO:** ConditionalTile
@@ -26,17 +26,20 @@ This tilemap system is a robust system that allows users to customise the tile t
 		*  Rectangle
 		*  Ellipse
 	* Proper Undo/Redo ([@nickgirardo](https://github.com/nickgirardo))
-	* **TODO:** Export/Import to JSON or ScriptableObject
+	* Export/Import to ScriptableObject
 * Different rendering modes
 	* Single Sprites
 	* Multiple Quads
-	* **TODO:** Single Quad - Uses a single quad and creates a custom texture
-	* **TODO:** Chunked Quads - Uses a grid of Multiple Quads ?
-* **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
 * **TODO:** Colliders
-* **TODO:** Layers
 
-!["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
+### Things I would like (But have been put on the back burner)
+* Good documentation
+* More rendering modes
+	* Single Quad
+	* Chunked Quads
+* Infinite or limited tilemap size (only available on chunked quads?)
+* Layers
+* In-Game tilemap editor
 
 ## Help ([More on the wiki](../../wiki))<a name="help"></a>
 
