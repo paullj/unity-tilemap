@@ -11,7 +11,6 @@ namespace toinfiniityandbeyond.Tilemapping
 		public bool edgesAreFull = false;
 
 		private Texture2D texture;
-		private Color [] colors;
 
 		//Called when the inspector has been edited
 		private void OnValidate ()
@@ -92,30 +91,20 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			return bitmaskSprites [15];
 		}
-		public override Texture2D GetTexture (TileMap tilemap = null, Point position = default (Point))
+		public override Texture2D GetIcon (TileMap tilemap = null, Point position = default (Point))
 		{
 			if (texture == null)
 				RebuildTexture ();
 			return texture;
 		}
-		public override Color [] GetColors (TileMap tilemap = null, Point position = default (Point))
-		{
-			if (colors.Length == 0)
-				RebuildTexture ();
-			return colors;
-		}
-		
+			
 		public void RebuildTexture ()
 		{
 			if (!IsValid)
 				return;
 			Sprite sprite = bitmaskSprites [15];
 			texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			colors = sprite.texture.GetPixels ((int)sprite.textureRect.x,
-												(int)sprite.textureRect.y,
-												(int)sprite.textureRect.width,
-												(int)sprite.textureRect.height);
-			texture.SetPixels (colors);
+			
 			texture.filterMode = sprite.texture.filterMode;
 			texture.wrapMode = sprite.texture.wrapMode;
 			texture.Apply ();

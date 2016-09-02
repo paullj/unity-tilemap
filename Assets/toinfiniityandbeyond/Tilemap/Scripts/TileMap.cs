@@ -7,7 +7,7 @@ namespace toinfiniityandbeyond.Tilemapping
     [ExecuteInEditMode, AddComponentMenu("2D/TileMap"), DisallowMultipleComponent, HelpURL("https://github.com/toinfiniityandbeyond/Tilemap/wiki/TileMap-Component")]
     public class TileMap : MonoBehaviour
     {
-		[SerializeField]
+        [SerializeField]
         private int width = 25, height = 25;
         [SerializeField]
         private ScriptableTile[] map = new ScriptableTile[0];
@@ -20,6 +20,7 @@ namespace toinfiniityandbeyond.Tilemapping
         public Action OnUpdateTileMap = () => { };
         public Action<int, int> OnResize = (width, height) => { };
 
+        public ScriptableTile[] Map { get { return map; } } 
         public int Width { get { return width; } }
         public int Height { get { return height; } }
 
@@ -53,12 +54,12 @@ namespace toinfiniityandbeyond.Tilemapping
         }
 
         public void Reset()
-        {          
+        {
             map = new ScriptableTile[width * height];
-			timeline = new Timeline();
+            timeline = new Timeline();
             CurrentEdit = new List<ChangeElement>();
 
-			UpdateTileMap();
+            UpdateTileMap();
         }
 
         public void Resize(int newWidth, int newHeight)
@@ -128,16 +129,13 @@ namespace toinfiniityandbeyond.Tilemapping
                 from.ID != to.ID))
             {
                 map[x + y * width] = to;
-#if UNITY_EDITOR
-                if (debug)
-                    Debug.LogFormat("Set [{0}, {1}] from {2} to {3}", x, y, from ? from.Name : "nothing", to ? to.Name : "nothing");
-#endif
-				if(CurrentEdit == null) 
-					CurrentEdit = new List<ChangeElement>();
+
+                if (CurrentEdit == null)
+                    CurrentEdit = new List<ChangeElement>();
                 CurrentEdit.Add(new ChangeElement(x, y, from, to));
 
                 UpdateTileAt(x, y);
-                UpdateTileNeighbours(x, y, true);
+                UpdateNeighbours(x, y, true);
 
                 return true;
             }
@@ -151,7 +149,14 @@ namespace toinfiniityandbeyond.Tilemapping
         {
             OnUpdateTileAt.Invoke(x, y);
         }
-        public void UpdateTileNeighbours(int x, int y, bool incudeCorners = false)
+        public void UpdateTilesAt(Point[] points)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                UpdateTileAt(points[i]);
+            }
+        }
+        public void UpdateNeighbours(int x, int y, bool incudeCorners = false)
         {
             for (int xx = -1; xx <= 1; xx++)
             {
@@ -168,12 +173,40 @@ namespace toinfiniityandbeyond.Tilemapping
                 }
             }
         }
+        public void UpdateType(ScriptableTile type)
+        {
+            for (int x = 0; x <= Width; x++)
+            {
+                for (int y = 0; y <= Height; y++)
+                {
+                    if(GetTileAt(x, y) == type) {
+                        UpdateTileAt(x, y);
+                    }
+                }
+            }        
+        }
+        public List<ScriptableTile> GetAllTileTypes()
+        {
+            List<ScriptableTile> result = new List<ScriptableTile>();
+            for (int x = 0; x <= Width; x++)
+            {
+                for (int y = 0; y <= Height; y++)
+                {
+                    ScriptableTile tile = GetTileAt(x, y);
+                    if(!result.Contains(tile) && tile != null)
+                    {
+                        result.Add(tile);
+                    }
+                }
+            }
+            return result;
+        }
         public void UpdateTileMap()
         {
             OnUpdateTileMap.Invoke();
         }
 
- 		public bool CanUndo
+        public bool CanUndo
         {
             get { return (timeline != null && timeline.CanUndo); }
         }
@@ -192,7 +225,7 @@ namespace toinfiniityandbeyond.Tilemapping
             {
                 map[c.x + c.y * width] = c.from;
                 UpdateTileAt(c.x, c.y);
-                UpdateTileNeighbours(c.x, c.y, true);
+                UpdateNeighbours(c.x, c.y, true);
             }
         }
 
@@ -206,27 +239,18 @@ namespace toinfiniityandbeyond.Tilemapping
             {
                 map[c.x + c.y * width] = c.to;
                 UpdateTileAt(c.x, c.y);
-                UpdateTileNeighbours(c.x, c.y, true);
+                UpdateNeighbours(c.x, c.y, true);
             }
         }
 
         public void BeginOperation()
         {
-#if UNITY_EDITOR
-            if (debug)
-                Debug.Log("Starting Operation");
-#endif
             CurrentOperation = true;
             CurrentEdit = new List<ChangeElement>();
         }
 
         public void FinishOperation()
         {
-#if UNITY_EDITOR
-            if (debug)
-                Debug.Log("Finishing Operation");
-#endif
-
             CurrentOperation = false;
             if (timeline == null)
                 timeline = new Timeline();
@@ -240,7 +264,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
         //A cheat-y way of serialising editor variables in the Unity Editor
 #if UNITY_EDITOR
-        public bool debug, isInEditMode = false;
+        public bool isInEditMode = false;
 
         public ScriptableTile primaryTile, secondaryTile;
 

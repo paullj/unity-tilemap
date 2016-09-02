@@ -48,21 +48,19 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			OnClick(point, tile, map);
 		}
-		public override List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		public override List<Point> GetRegion (Point point, ScriptableTile tile, TileMap map) 
 		{
 			region = new List<Point>();
+			//Arbitrary clamping of brush size
+			radius = Mathf.Clamp(radius, 1, 64);
 			int correctedRadius = radius - 1;
 			for (int x = -correctedRadius; x <= correctedRadius; x++)
 			{
 				for (int y = -correctedRadius; y <= correctedRadius; y++)
 				{
 					Point offsetPoint = point + new Point (x, y);
-					if (shape == BrushShape.Circle) {
-						Vector2 delta = (Vector2)(offsetPoint - point);
-						if (delta.sqrMagnitude > correctedRadius * correctedRadius)
-							continue;
-					}
-					region.Add(offsetPoint);
+					if(shape == BrushShape.Square || ((Vector2)(offsetPoint-point)).sqrMagnitude <= correctedRadius * correctedRadius)
+						region.Add(offsetPoint);
 				}
 			}
 			return region;

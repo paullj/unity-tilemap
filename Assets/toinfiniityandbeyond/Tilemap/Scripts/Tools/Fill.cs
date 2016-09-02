@@ -42,7 +42,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			region = new List<Point>();
 
 		}
-		public override List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		public override List<Point> GetRegion (Point point, ScriptableTile tile, TileMap map) 
 		{
 			if(region.Contains(point))
 				return region;

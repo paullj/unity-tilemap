@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-using toinfiniityandbeyond.UI;
+using toinfiniityandbeyond.Utillity;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -22,20 +22,18 @@ namespace toinfiniityandbeyond.Tilemapping
 			RefreshScriptableToolCache ();
 			RefreshScriptableTileCache ();
 			EditorApplication.update += Update;
-
-			Undo.undoRedoPerformed += tileMap.UpdateTileMap;
 		}
 		partial void OnSceneDisable ()
 		{
 			EditorApplication.update -= Update;
-			
-			Undo.undoRedoPerformed -= tileMap.UpdateTileMap;
 		}
 		private void Update () {
 			if (tileMap.isInEditMode) {
 				Selection.activeObject = tileMap;
 				SceneView currentView = SceneView.lastActiveSceneView;
-				currentView.in2DMode = true;
+				if(currentView)
+					currentView.in2DMode = true;
+				
 				Tools.current = Tool.None;
 				SceneModeUtility.SearchForType (typeof(TileMap));
 			}
@@ -112,11 +110,11 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.contentColor = Color.black;
 			if (tileMap.secondaryTile)
 			{
-				GUI.DrawTexture (secondaryTileRect, tileMap.secondaryTile.GetTexture (tileMap));
+				GUI.DrawTexture (secondaryTileRect, tileMap.secondaryTile.GetIcon (tileMap));
 				GUI.contentColor = Color.white;
 				text = tileMap.secondaryTile.Name;
 			}
-			GUI.Label (secondaryTileRect, text, CustomStyles.centerWhiteMiniLabel);
+			GUI.Label (secondaryTileRect, text, MyStyles.centerWhiteMiniLabel);
 
 			Rect primaryTileRect = new Rect (5, 25, tileMap.toolbarWindowPosition.width * 0.6f, tileMap.toolbarWindowPosition.width * 0.6f);
 			tileMap.primaryTilePickerToggle = GUI.Toggle (primaryTileRect, tileMap.primaryTilePickerToggle, GUIContent.none, "Label");
@@ -127,11 +125,11 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.contentColor = Color.black;
 			if (tileMap.primaryTile)
 			{
-				GUI.DrawTexture (primaryTileRect, tileMap.primaryTile.GetTexture (tileMap));
+				GUI.DrawTexture (primaryTileRect, tileMap.primaryTile.GetIcon (tileMap));
 				GUI.contentColor = Color.white;
 				text = tileMap.primaryTile.Name;
 			}
-			GUI.Label (primaryTileRect, text, CustomStyles.centerWhiteBoldLabel);
+			GUI.Label (primaryTileRect, text, MyStyles.centerWhiteBoldLabel);
 			GUI.contentColor = Color.white;
 
 			float tileHeight = 10 + primaryTileRect.height + 0.5f * secondaryTileRect.height;
@@ -153,7 +151,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.color = Color.white;
 			GUILayout.EndHorizontal ();
 
-			CustomGUILayout.Splitter();
+			MyGUILayout.Splitter();
 
 			GUILayout.BeginHorizontal ();
 
@@ -161,19 +159,21 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (GUILayout.Button ("Undo [Z]"))
 			{
 				tileMap.Undo ();
+				SetTileMapDirty();
 			}
 			GUI.enabled = tileMap.CanRedo;
 			if (GUILayout.Button ("Redo [R]"))
 			{
 				tileMap.Redo ();
+				SetTileMapDirty();
 			}
 			GUI.enabled = true;
 			
 			GUILayout.EndHorizontal ();
-			CustomGUILayout.Splitter();
+			MyGUILayout.Splitter();
 
 
-			GUILayout.Label ("Tools", CustomStyles.leftBoldLabel);
+			GUILayout.Label ("Tools", MyStyles.leftBoldLabel);
 			EditorGUILayout.HelpBox ("[RMB] to toggle tool", MessageType.Info, true);
 
 			for (int i = 0; i < tileMap.scriptableToolCache.Count; i++)
@@ -207,7 +207,7 @@ namespace toinfiniityandbeyond.Tilemapping
 
 				if (fields.Length > 0)
 				{
-					GUILayout.Label ("Settings", CustomStyles.leftBoldLabel, GUILayout.Width (100));
+					GUILayout.Label ("Settings", MyStyles.leftBoldLabel, GUILayout.Width (100));
 					for (int i = 0; i < fields.Length; i++)
 					{
 						FieldInfo field = fields [i];
@@ -345,7 +345,7 @@ namespace toinfiniityandbeyond.Tilemapping
 								tileMap.primaryTilePickerToggle = tileMap.secondaryTilePickerToggle = false;
 							}
 							GUI.DrawTexture (GUILayoutUtility.GetLastRect (), new Texture2D(16, 16));
-							GUI.Label (GUILayoutUtility.GetLastRect(), "None", CustomStyles.centerBoldLabel);
+							GUI.Label (GUILayoutUtility.GetLastRect(), "None", MyStyles.centerBoldLabel);
 						}
 
 						if (index >= tileMap.scriptableTileCache.Count ||index < 0)
@@ -374,12 +374,12 @@ namespace toinfiniityandbeyond.Tilemapping
 						GUI.DrawTexture (buttonRect, new Texture2D(16, 16));
 						if (tileMap.scriptableTileCache [index].IsValid)
 						{
-							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetTexture (tileMap));
+							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetIcon (tileMap));
 							tileText = tileMap.scriptableTileCache [index].Name;
 						}
 						GUI.color = Color.white;
 
-						GUI.Label (buttonRect, tileText, CustomStyles.centerWhiteBoldLabel);
+						GUI.Label (buttonRect, tileText, MyStyles.centerWhiteBoldLabel);
 					}
 					GUILayout.EndHorizontal ();
 				}
@@ -493,11 +493,13 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.Z)
 			{
 				tileMap.Undo ();
+				SetTileMapDirty();
 			}
 
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.R)
 			{
 				tileMap.Redo ();
+				SetTileMapDirty();
 			}
 
 			if (Event.current.type == EventType.KeyDown && Event.current.isKey && Event.current.keyCode == KeyCode.X)
@@ -525,39 +527,32 @@ namespace toinfiniityandbeyond.Tilemapping
 				if (e.button == 0)
 				{
 					bool isInBounds = GetMousePosition (ref point);
-					if(isInBounds)
+					
+					if (e.type == EventType.MouseDrag)
 					{
-						if (e.type == EventType.MouseDrag)
-						{
-							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClick (point, tileMap.primaryTile, tileMap);
-						}
-						if (e.type == EventType.MouseDown)
-						{
-							tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickDown (point, tileMap.primaryTile, tileMap);
-						}
+						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClick (point, tileMap.primaryTile, tileMap);
+					}
+					if (e.type == EventType.MouseDown)
+					{
+						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickDown (point, tileMap.primaryTile, tileMap);
 					}
 					if(e.type == EventType.MouseUp)
 					{
 						tileMap.scriptableToolCache [tileMap.selectedScriptableTool].OnClickUp (point, tileMap.primaryTile, tileMap);
 						
-						if(!Application.isPlaying) {
-							EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-							EditorUtility.SetDirty (tileMap);
-						}
+						SetTileMapDirty();
 					}
-					List<Point> region = tileMap.scriptableToolCache [tileMap.selectedScriptableTool].GetToolRegion (point, tileMap.primaryTile, tileMap);
-					Handles.color = isInBounds ? (tileMap.selectedScriptableTool  >= 0 ?  new Color (0.5f, 1, 0.5f) : new Color(1, 0.75f, 0.5f)) : new Color (1, 0.5f, 0.5f);
-					Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
-					GUIStyle style = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+					List<Point> region = tileMap.scriptableToolCache [tileMap.selectedScriptableTool].GetRegion (point, tileMap.primaryTile, tileMap);
+					GUIStyle style = new GUIStyle(MyStyles.centerWhiteBoldLabel);
 					style.normal.textColor = Handles.color;
 					Handles.Label((Vector2)position + (Vector2)point, point.ToString(), style);
 					
 					for(int i = 0; i < region.Count; i++)
 					{
+						Handles.color = tileMap.IsInBounds(region[i]) ?  new Color (0.5f, 1, 0.5f) : new Color (1, 0.5f, 0.5f);
+						Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
 						point = region[i];
 						Vector2 tilePosition = (Vector2)position + (Vector2)point;
-						
-						//Handles.DrawWireCube (tilePosition + Vector2.one * 0.5f, Vector2.one);
 						Handles.CubeCap (0, tilePosition + Vector2.one * 0.5f, Quaternion.identity, 1f);
 					}
 				}
@@ -591,6 +586,14 @@ namespace toinfiniityandbeyond.Tilemapping
 			r.x = Mathf.Clamp (r.x, 5, Screen.width - r.width - 5);
 			r.y = Mathf.Clamp (r.y, 25, Screen.height - r.height - 25);
 			return r;
+		}
+		private void SetTileMapDirty() 
+		{
+			if (!Application.isPlaying)
+			{
+				EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+				EditorUtility.SetDirty(tileMap);
+			}
 		}
 	}
 }

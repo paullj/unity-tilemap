@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditorInternal;
 
-using toinfiniityandbeyond.UI;
+using toinfiniityandbeyond.Utillity;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -22,13 +22,13 @@ namespace toinfiniityandbeyond.Tilemapping
 			Rect headerRect = new Rect (0, 0, Screen.width, 50);
 			GUILayout.BeginArea (headerRect, new GUIStyle("IN ThumbnailShadow"));
 			Rect contentRect = new Rect (10, 10, Screen.width - 20, 30);
-			GUI.DrawTexture (new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height), scriptableTile.GetTexture (null, Point.zero), ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height), scriptableTile.GetIcon (null, Point.zero), ScaleMode.ScaleAndCrop);
 			contentRect.x += contentRect.height + 10;
 			contentRect.width -= contentRect.x;
-			GUI.Label (new Rect (contentRect.x, contentRect.y, contentRect.width, contentRect.height / 2), scriptableTile.name, CustomStyles.leftBoldLabel);
-			GUI.Label (new Rect (contentRect.x, contentRect.y + contentRect.height / 2, contentRect.width, contentRect.height / 2), "Tile Type: " + scriptableTile.GetType ().Name, CustomStyles.leftMiniLabel);
+			GUI.Label (new Rect (contentRect.x, contentRect.y, contentRect.width, contentRect.height / 2), scriptableTile.name, MyStyles.leftBoldLabel);
+			GUI.Label (new Rect (contentRect.x, contentRect.y + contentRect.height / 2, contentRect.width, contentRect.height / 2), "Tile Type: " + scriptableTile.GetType ().Name, MyStyles.leftMiniLabel);
 			GUIContent content = new GUIContent (EditorGUIUtility.FindTexture ("_Help"), "Open Reference for " + scriptableTile.GetType ().Name);
-			if (GUI.Button (new Rect(contentRect.x + contentRect.width - 10, contentRect.y, 20, contentRect.height), content, CustomStyles.centerBoldLabel)) {
+			if (GUI.Button (new Rect(contentRect.x + contentRect.width - 10, contentRect.y, 20, contentRect.height), content, MyStyles.centerBoldLabel)) {
 				Application.OpenURL ("https://github.com/toinfiniityandbeyond/Tilemap/wiki/" + scriptableTile.GetType ().Name);
 			}
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using toinfiniityandbeyond.UI;
+using toinfiniityandbeyond.Utillity;
 
 namespace toinfiniityandbeyond.Tilemapping {
 	[CustomEditor (typeof (AutoTile))]
@@ -31,7 +31,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 		public override void OnInspectorGUI ()
 		{
 			EditorGUILayout.HelpBox ("Fill the grid below with tiles in the '4x4' layout. Click the help button for more info.", MessageType.Info);
-			GUILayout.Label ("Sprites:", CustomStyles.leftBoldLabel);
+			GUILayout.Label ("Sprites:", MyStyles.leftBoldLabel);
 
 			int size = 4;
 			float sizePerButton = EditorGUIUtility.currentViewWidth / size - 15;
@@ -62,7 +62,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 						GUI.color = new Color (1, 0.5f, 0.5f);
 						labelText = "Enable read/write";
 					}
-					if (GUILayout.Button (GUIContent.none, CustomStyles.centerWhiteBoldLabel, GUILayout.Width (sizePerButton), GUILayout.Height (sizePerButton)))
+					if (GUILayout.Button (GUIContent.none, MyStyles.centerWhiteBoldLabel, GUILayout.Width (sizePerButton), GUILayout.Height (sizePerButton)))
 					{
 						EditorGUIUtility.ShowObjectPicker<Sprite> (autoTile.bitmaskSprites [index], false, "", index);
 					}
@@ -72,11 +72,11 @@ namespace toinfiniityandbeyond.Tilemapping {
 					GUI.DrawTexture (r, texture);
 					GUI.color = Color.white;
 
-					GUIStyle labelStyle = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+					GUIStyle labelStyle = new GUIStyle(MyStyles.centerWhiteBoldLabel);
 
 					GUI.Label (r, labelText, labelStyle);
 					
-					GUIStyle symbolStyle = new GUIStyle(CustomStyles.centerWhiteBoldLabel);
+					GUIStyle symbolStyle = new GUIStyle(MyStyles.centerWhiteBoldLabel);
 					symbolStyle.fontSize = 60;
 					symbolStyle.normal.textColor = new Color(1, 1, 1, 0.3f);
 					GUI.Label (r, symbolLookup[y, x], symbolStyle);
@@ -87,7 +87,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 			}
 			GUILayout.EndHorizontal ();
 
-			GUILayout.Label ("Settings:", CustomStyles.leftBoldLabel);
+			GUILayout.Label ("Settings:", MyStyles.leftBoldLabel);
 			autoTile.edgesAreFull = EditorGUILayout.Toggle ("Edges are full", autoTile.edgesAreFull);
 			autoTile.onlySameTiles = EditorGUILayout.Toggle ("Only same tiles", autoTile.onlySameTiles);
 

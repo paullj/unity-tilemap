@@ -71,19 +71,13 @@ namespace toinfiniityandbeyond.Tilemapping
                 lastIndex = index;
             return keyframes[lastIndex].sprite;
         }
-        public override Texture2D GetTexture(TileMap tilemap = null, Point position = default(Point))
+        public override Texture2D GetIcon(TileMap tilemap = null, Point position = default(Point))
         {
             if (texture == null)
                 RebuildTexture();
             return texture;
         }
-        public override Color[] GetColors(TileMap tilemap = null, Point position = default(Point))
-        {
-            if (colors.Length == 0)
-                RebuildTexture();
-            return colors;
-        }
-
+      
         public override float TickRate { get { return 0.1f; } }
         protected override bool Tick()
         {

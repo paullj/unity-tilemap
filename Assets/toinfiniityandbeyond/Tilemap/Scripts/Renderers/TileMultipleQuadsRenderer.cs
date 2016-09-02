@@ -1,19 +1,33 @@
 ﻿using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
     [AddComponentMenu("2D/Renderer/TileMultipleQuadsRenderer")]
     public class TileMultipleQuadsRenderer : TileRenderer
     {
+        public enum TextureAtlasMode { Normal, Dynamic, SameFile }
         [SerializeField]
-        private Texture2D textureAtlas;
+        List<Sprite> spriteList = new List<Sprite>();
+        [SerializeField]
+        Rect[] rects = new Rect[0];
+        [SerializeField]
+        private Texture2D atlas;
         [SerializeField]
         private MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
 
+        public Texture2D Atlas {
+            get { return atlas; }
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+        } 
         private void SetUpMesh()
         {
-            if(meshRenderer == null || meshFilter == null)
+            if (meshRenderer == null || meshFilter == null)
             {
                 ClearChildren();
                 meshFilter = new GameObject("_MESH").AddComponent<MeshFilter>();
@@ -27,6 +41,23 @@ namespace toinfiniityandbeyond.Tilemapping
                 meshRenderer.transform.localScale = Vector2.one;
             }
         }
+        public void RefreshAtlas() {
+             spriteList = new List<Sprite>();
+             tileMap.UpdateTileMap();
+        } 
+        private bool AddSpriteToAtlas(Sprite sprite)
+        {
+            if (spriteList.Contains(sprite))
+                return false;
+
+            spriteList.Add(sprite);
+            atlas = new Texture2D(16, 16, TextureFormat.RGBA32, false);
+            rects = atlas.PackTextures(spriteList.Select(x => x.ToTexture2D()).ToArray(), 0);
+            atlas.filterMode = FilterMode.Point;
+            atlas.wrapMode = TextureWrapMode.Clamp;
+            atlas.Apply();
+            return true;
+       }
 
         public override void Resize(int width, int height)
         {
@@ -47,10 +78,9 @@ namespace toinfiniityandbeyond.Tilemapping
                     var ti = i * 6;
 
                     // vertices going clockwise
-                    // 2--3
-                    // | /|
-                    // |/ |
-                    // 0--1
+                    // 2 -- 3
+                    // |  / |
+                    // 0 -- 1
                     vertices[qi] = new Vector3(x, y, 0);
                     vertices[qi + 1] = new Vector3(x + 1, y, 0);
                     vertices[qi + 2] = new Vector3(x, y + 1, 0);
@@ -85,10 +115,11 @@ namespace toinfiniityandbeyond.Tilemapping
         }
 
         public override void UpdateTileMap()
-        {
-			base.UpdateTileMap();
+        {          
+            base.UpdateTileMap();
+
             meshRenderer.sharedMaterial = material;
-            meshRenderer.sharedMaterial.SetTexture("_MainTex", textureAtlas);
+            meshRenderer.sharedMaterial.SetTexture("_MainTex", atlas);
             meshRenderer.sharedMaterial.color = color;
             meshRenderer.sortingLayerID = sortingLayer;
             meshRenderer.sortingOrder = orderInLayer;
@@ -102,143 +133,45 @@ namespace toinfiniityandbeyond.Tilemapping
 
             quadIndex *= 4;
             var uv = meshFilter.sharedMesh.uv;
-
-            if (tile == null) {
+            if (tile == null)
+            {
                 uv[quadIndex] = uv[quadIndex + 1] = uv[quadIndex + 2] = uv[quadIndex + 3] = Vector2.zero;
-          
+
                 meshFilter.sharedMesh.uv = uv;
                 return;
             }
 
+            Vector2[] prevUVs = new Vector2[] {
+                uv[quadIndex],
+                uv[quadIndex + 1],
+                uv[quadIndex + 2],
+                uv[quadIndex + 3]
+            };
+
             Sprite sprite = tile.GetSprite(tileMap, new Point(x, y));
-            textureAtlas = sprite.texture;
-            var r = sprite.textureRect;
-            
-            // if (currentTexture != null && currentTexture != tile.GetSprite(tileMap, new Point(x, y)))
-            //      throw new ArgumentException("Sprites from different textures is not supported in QuadGrid mode.");
-            
-
+            bool atlasUpdated = AddSpriteToAtlas(sprite);
+         
             // assign four uv coordinates to change the texture of one tile (one quad, two triangels)
-            uv[quadIndex] = RectToUV(new Vector2(r.xMin, r.yMin), sprite.texture);
-            uv[quadIndex + 1] = RectToUV(new Vector2(r.xMax, r.yMin), sprite.texture);
-            uv[quadIndex + 2] = RectToUV(new Vector2(r.xMin, r.yMax), sprite.texture);
-            uv[quadIndex + 3] = RectToUV(new Vector2(r.xMax, r.yMax), sprite.texture);
-          
-            meshFilter.sharedMesh.uv = uv;
-        }
-        private Vector2 RectToUV(Vector2 xy, Texture2D texture)
-        {
-            return new Vector2(xy.x / texture.width, xy.y / texture.height);
-        }
-        //	private void Build (int width, int height, ScriptableTile [] map)
-        //	{
-        /*meshFilter = GetComponent<MeshFilter> () ? GetComponent<MeshFilter> () : gameObject.AddComponent<MeshFilter> ();
-        meshRenderer = GetComponent<MeshRenderer> () ? GetComponent<MeshRenderer> () : gameObject.AddComponent<MeshRenderer> ();
-
-        //meshFilter.hideFlags = HideFlags.HideInInspector;
-
-        Mesh mesh = meshFilter.mesh = new Mesh ();
-
-        Vector3 [] vertices = new Vector3 [0];
-        Vector2 [] uv = new Vector2 [0];
-        Vector4 [] tangents = new Vector4 [0];
-        Vector4 tangent = new Vector4 (1f, 0f, 0f, -1f);
-        int [] triangles = new int [0];
-
-        if (meshType == MeshType.SingleQuad)
-        {
-            vertices = new Vector3 [4] {
-                new Vector3(0, 0),
-                new Vector3(width, 0),
-                new Vector3(width, height),
-                new Vector3(0, height)
+            Rect spriteRect = rects[spriteList.IndexOf(sprite)];
+            Vector2[] newUVs = new Vector2[] {
+                new Vector2(spriteRect.xMin, spriteRect.yMin),
+                new Vector2(spriteRect.xMax, spriteRect.yMin),
+                new Vector2(spriteRect.xMin, spriteRect.yMax),
+                new Vector2(spriteRect.xMax, spriteRect.yMax)
             };
-            uv = new Vector2 [4]
+   
+            if(!newUVs.SequenceEqual(prevUVs))
             {
-                new Vector2 (0, 0),
-                new Vector2 (1, 0),
-                new Vector2 (1, 1),
-                new Vector2 (0, 1)
-            };
-            tangents = new Vector4 [4]
-            {
-                tangent,
-                tangent,
-                tangent,
-                tangent
-            };
-
-            triangles = new int [6]
-            {
-                3, 2, 1,
-                3, 1, 0,
-            };
-        }
-        else if (meshType == MeshType.MultipleQuads)
-        {
-            vertices = new Vector3 [(width + 1) * (height + 1)];
-            uv = new Vector2 [vertices.Length];
-            tangents = new Vector4 [vertices.Length];
-
-            for (int i = 0, y = 0; y <= height; y++)
-            {
-                for (int x = 0; x <= width; x++, i++)
-                {
-                    vertices [i] = new Vector3 (x, y);
-                    uv [i] = new Vector2 ((float)x / width, (float)y / height);
-                    tangents [i] = tangent;
-                }
-            }
-
-            triangles = new int [width * height * 6];
-            for (int ti = 0, vi = 0, y = 0; y < height; y++, vi++)
-            {
-                for (int x = 0; x < width; x++, ti += 6, vi++)
-                {
-                    triangles [ti] = vi;
-                    triangles [ti + 3] = triangles [ti + 2] = vi + 1;
-                    triangles [ti + 4] = triangles [ti + 1] = vi + width + 1;
-                    triangles [ti + 5] = vi + width + 2;
-                }
+                uv[quadIndex] = newUVs[0];
+                uv[quadIndex + 1] = newUVs[1];
+                uv[quadIndex + 2] = newUVs[2];
+                uv[quadIndex + 3] = newUVs[3];
+                meshFilter.sharedMesh.uv = uv;
+                
+                if(atlasUpdated)
+                    //FIXME so that it only updates tiles who have changed uvs
+                   tileMap.UpdateType(tile);
             }
         }
-        mesh.vertices = vertices;
-        mesh.uv = uv;
-        mesh.tangents = tangents;
-        mesh.triangles = triangles;
-
-        mesh.RecalculateNormals ();
-        mesh.RecalculateBounds ();
-
-    //	meshRenderer.hideFlags = HideFlags.HideInInspector;
-
-        meshRenderer.sortingLayerID = sortingLayer;
-        meshRenderer.sortingOrder = orderInLayer;
-
-        Texture2D mapTexture = new Texture2D (width * 16, height * 16);
-        MaterialPropertyBlock mpb = new MaterialPropertyBlock ();
-
-        mpb.SetColor ("_Color", color);
-        mpb.SetTexture ("_MainTex", mapTexture);
-        meshRenderer.SetPropertyBlock (mpb);
-
-        meshRenderer.material = material;
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                BaseTile currentTile = map [x + y * width];
-                Color [] colours = (currentTile ? currentTile.GetColors (tileMap, new Point (x, y)) :
-                    Enumerable.Repeat (Color.clear, 16 * 16).ToArray ());
-
-                mapTexture.SetPixels (x * 16, y * 16, 16, 16, colours);
-            }
-        }
-        mapTexture.filterMode = FilterMode.Point;
-        mapTexture.alphaIsTransparency = true;
-        mapTexture.Apply ();
-    */
-        //		}
     }
 }

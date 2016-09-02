@@ -9,8 +9,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public abstract bool IsValid { get; }
 
 		public abstract Sprite GetSprite (TileMap tilemap = null, Point position = default (Point));
-		public abstract Color [] GetColors (TileMap tilemap = null, Point position = default (Point));
-		public abstract Texture2D GetTexture (TileMap tilemap = null, Point position = default (Point));
+		public abstract Texture2D GetIcon (TileMap tilemap = null, Point position = default (Point));
 		
 		//Handle Ticking
 		private float timeOffset = 0;

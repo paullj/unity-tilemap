@@ -29,7 +29,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		public string Name { get { return this.GetType ().Name; } }
 		// Unique ID of this ScriptableBrush
 		public int ID { get { return Animator.StringToHash (Name); } }
-		// Small summary on what the ScriptableTool does
+		// The shortcut used in the tile editor
 		public virtual KeyCode Shortcut { get { return KeyCode.None; } }
 		// Small summary on what the ScriptableTool does
 		public virtual string Description { get { return string.Empty; } }
@@ -47,7 +47,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			map.FinishOperation ();
 		}
 		//The region to draw a tool preview for
-		public virtual List<Point> GetToolRegion (Point point, ScriptableTile tile, TileMap map) 
+		public virtual List<Point> GetRegion (Point point, ScriptableTile tile, TileMap map) 
 		{
 			region = new List<Point> { point };
 			return region;
