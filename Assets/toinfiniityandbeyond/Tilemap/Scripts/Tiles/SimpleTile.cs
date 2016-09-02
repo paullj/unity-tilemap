@@ -7,9 +7,6 @@ namespace toinfiniityandbeyond.Tilemapping
 	{
 		public Sprite sprite;
 
-		private Texture2D texture;
-		private Color [] colors;
-
         public override bool IsValid
         {
             get
@@ -33,32 +30,10 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			return sprite;
 		}
-		public override Texture2D GetIcon (TileMap tilemap = null, Point position = default (Point))
+		public override Texture2D GetIcon ()
 		{
-			//	if (texture == null)
-			//		RebuildTexture ();
-			return texture;
-		}
-	
-		private void OnValidate ()
-		{
-			RebuildTexture ();
-		}
-
-		public void RebuildTexture ()
-		{
-			if (!IsValid)
-				return;
-
-			texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			colors = sprite.texture.GetPixels ((int)sprite.textureRect.x,
-													(int)sprite.textureRect.y,
-													(int)sprite.textureRect.width,
-													(int)sprite.textureRect.height);
-			texture.SetPixels (colors);
-			texture.filterMode = sprite.texture.filterMode;
-			texture.wrapMode = sprite.texture.wrapMode;
-			texture.Apply ();
+			if (!IsValid) return null;
+			return sprite.ToTexture2D();
 		}
 	}
 }

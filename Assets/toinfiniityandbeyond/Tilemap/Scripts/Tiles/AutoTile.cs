@@ -7,16 +7,9 @@ namespace toinfiniityandbeyond.Tilemapping
 	public class AutoTile : ScriptableTile
 	{
 		public Sprite [] bitmaskSprites = new Sprite[16];
-		public bool onlySameTiles = true;
+		public enum AutoTileMode { Everything, SameTile, None}
+		public AutoTileMode mode;
 		public bool edgesAreFull = false;
-
-		private Texture2D texture;
-
-		//Called when the inspector has been edited
-		private void OnValidate ()
-		{
-			RebuildTexture ();
-		}
 		
 		//Returns if this tile is okay to be used in the tile map
 		//For example: if this tile doesn't have a Read/Write enabled sprite it will return false
@@ -81,8 +74,8 @@ namespace toinfiniityandbeyond.Tilemapping
 				bool exists = tiles[i] != null;
 				bool isSame = exists && tiles[i].ID == this.ID;
 				bool isEdge = !tilemap.IsInBounds (points[i]);
-			
-				if((isEdge && edgesAreFull) || (exists && (!onlySameTiles || isSame)))
+				
+				if((isEdge && edgesAreFull) || (exists && mode == AutoTileMode.Everything) || (exists && (mode == AutoTileMode.SameTile && isSame)))
 					index += bitmasks[i];
 			}
 
@@ -91,23 +84,10 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			return bitmaskSprites [15];
 		}
-		public override Texture2D GetIcon (TileMap tilemap = null, Point position = default (Point))
+		public override Texture2D GetIcon ()
 		{
-			if (texture == null)
-				RebuildTexture ();
-			return texture;
-		}
-			
-		public void RebuildTexture ()
-		{
-			if (!IsValid)
-				return;
-			Sprite sprite = bitmaskSprites [15];
-			texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			
-			texture.filterMode = sprite.texture.filterMode;
-			texture.wrapMode = sprite.texture.wrapMode;
-			texture.Apply ();
+			if (!IsValid) return null;
+			return bitmaskSprites[15].ToTexture2D();
 		}
 	}
 }

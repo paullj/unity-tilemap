@@ -22,7 +22,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			Rect headerRect = new Rect (0, 0, Screen.width, 50);
 			GUILayout.BeginArea (headerRect, new GUIStyle("IN ThumbnailShadow"));
 			Rect contentRect = new Rect (10, 10, Screen.width - 20, 30);
-			GUI.DrawTexture (new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height), scriptableTile.GetIcon (null, Point.zero), ScaleMode.ScaleAndCrop);
+			GUI.DrawTexture (new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height), scriptableTile.GetIcon (), ScaleMode.ScaleAndCrop);
 			contentRect.x += contentRect.height + 10;
 			contentRect.width -= contentRect.x;
 			GUI.Label (new Rect (contentRect.x, contentRect.y, contentRect.width, contentRect.height / 2), scriptableTile.name, MyStyles.leftBoldLabel);

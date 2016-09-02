@@ -19,13 +19,6 @@ namespace toinfiniityandbeyond.Tilemapping
         public bool globalAnimation = false;
         public List<TileKeyframe> keyframes = new List<TileKeyframe>();
         private int lastIndex = -1;
-        private Texture2D texture;
-        private Color[] colors;
-
-        private void OnValidate()
-        {
-            RebuildTexture();
-        }
 
         public override bool IsValid
         {
@@ -70,33 +63,16 @@ namespace toinfiniityandbeyond.Tilemapping
                 lastIndex = index;
             return keyframes[lastIndex].sprite;
         }
-        public override Texture2D GetIcon(TileMap tilemap = null, Point position = default(Point))
+        public override Texture2D GetIcon()
         {
-            if (texture == null)
-                RebuildTexture();
-            return texture;
+           if (!IsValid) return null;
+			return keyframes[0].sprite.ToTexture2D();
         }
       
         public override float TickRate { get { return 0.1f; } }
         protected override bool Tick()
         {
             return true;
-        }
-
-        public void RebuildTexture()
-        {
-            if (!IsValid)
-                return;
-            Sprite sprite = keyframes[0].sprite;
-            texture = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-            colors = sprite.texture.GetPixels((int)sprite.textureRect.x,
-                                                (int)sprite.textureRect.y,
-                                                (int)sprite.textureRect.width,
-                                                (int)sprite.textureRect.height);
-            texture.SetPixels(colors);
-            texture.filterMode = sprite.texture.filterMode;
-            texture.wrapMode = sprite.texture.wrapMode;
-            texture.Apply();
         }
     }
 }

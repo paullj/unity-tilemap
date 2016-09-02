@@ -110,7 +110,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.contentColor = Color.black;
 			if (tileMap.secondaryTile)
 			{
-				GUI.DrawTexture (secondaryTileRect, tileMap.secondaryTile.GetIcon (tileMap));
+				GUI.DrawTexture (secondaryTileRect, tileMap.secondaryTile.GetIcon ());
 				GUI.contentColor = Color.white;
 				text = tileMap.secondaryTile.Name;
 			}
@@ -125,7 +125,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.contentColor = Color.black;
 			if (tileMap.primaryTile)
 			{
-				GUI.DrawTexture (primaryTileRect, tileMap.primaryTile.GetIcon (tileMap));
+				GUI.DrawTexture (primaryTileRect, tileMap.primaryTile.GetIcon ());
 				GUI.contentColor = Color.white;
 				text = tileMap.primaryTile.Name;
 			}
@@ -374,7 +374,7 @@ namespace toinfiniityandbeyond.Tilemapping
 						GUI.DrawTexture (buttonRect, new Texture2D(16, 16));
 						if (tileMap.scriptableTileCache [index].IsValid)
 						{
-							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetIcon (tileMap));
+							GUI.DrawTexture (buttonRect, tileMap.scriptableTileCache [index].GetIcon ());
 							tileText = tileMap.scriptableTileCache [index].Name;
 						}
 						GUI.color = Color.white;

@@ -35,7 +35,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 
 			int size = 4;
 			float sizePerButton = EditorGUIUtility.currentViewWidth / size - 15;
-			GUILayout.BeginHorizontal ();
+			GUILayout.BeginHorizontal();
 			for (int x = 0; x < size; x++)
 			{
 				GUILayout.BeginVertical ();
@@ -68,7 +68,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 					}
 					Rect r = GUILayoutUtility.GetLastRect ();
 
-					Texture2D texture = autoTile.IsElementValid (index) ? TextureFromSprite (autoTile.bitmaskSprites [index]) : new Texture2D(16, 16);
+					Texture2D texture = autoTile.IsElementValid (index) ? autoTile.bitmaskSprites [index].ToTexture2D() : new Texture2D(16, 16);
 					GUI.DrawTexture (r, texture);
 					GUI.color = Color.white;
 
@@ -89,7 +89,7 @@ namespace toinfiniityandbeyond.Tilemapping {
 
 			GUILayout.Label ("Settings:", MyStyles.leftBoldLabel);
 			autoTile.edgesAreFull = EditorGUILayout.Toggle ("Edges are full", autoTile.edgesAreFull);
-			autoTile.onlySameTiles = EditorGUILayout.Toggle ("Only same tiles", autoTile.onlySameTiles);
+			autoTile.mode = (AutoTile.AutoTileMode)EditorGUILayout.EnumPopup("Tiling Mode", autoTile.mode);
 
 			int controlID = EditorGUIUtility.GetObjectPickerControlID ();
 			if (Event.current.commandName == "ObjectSelectorUpdated")
@@ -100,19 +100,6 @@ namespace toinfiniityandbeyond.Tilemapping {
 			{
 				EditorUtility.SetDirty (this);
 			}
-		}
-		private Texture2D TextureFromSprite(Sprite sprite)
-		{
-			var texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			var pixels = sprite.texture.GetPixels ((int)sprite.textureRect.x,
-													(int)sprite.textureRect.y,
-													(int)sprite.textureRect.width,
-													(int)sprite.textureRect.height);
-			texture.SetPixels (pixels);
-			texture.filterMode = sprite.texture.filterMode;
-			texture.wrapMode = sprite.texture.wrapMode;
-			texture.Apply ();
-			return texture;
 		}
 	}
 }
