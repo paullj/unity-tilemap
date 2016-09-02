@@ -32,15 +32,14 @@ This tilemap system is a robust system that allows users to customise the tile t
 	* Multiple Quads
 * **TODO:** Colliders
 
-Things I would like (But have been put on the back burner)
+### Things I would like (But have been put on the back burner)
+* Good documentation
 * More rendering modes
-	* **TODO:** Single Quad
-	* **TODO:** Chunked Quads
-* **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
-* **TODO:** Layers
-* **TODO:** In-Game tilemap editor
-
-!["Oops! There is supposed to be an image here :/"](/images/tilemap.gif)
+	* Single Quad
+	* Chunked Quads
+* Infinite or limited tilemap size (only available on chunked quads?)
+* Layers
+* In-Game tilemap editor
 
 ## Help ([More on the wiki](../../wiki))<a name="help"></a>
 
