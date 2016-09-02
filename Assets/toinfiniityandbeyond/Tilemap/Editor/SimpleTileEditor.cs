@@ -16,6 +16,8 @@ namespace toinfiniityandbeyond.Tilemapping
 		public override void OnInspectorGUI ()
 		{
 			GUILayout.Space (10);
+			EditorGUILayout.HelpBox("As simple as it comes, renders the sprite selected", MessageType.Info);
+			GUILayout.Space (10);
 
 			GUILayout.Label ("Sprite:", MyStyles.leftBoldLabel);
 
@@ -30,7 +32,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 			Rect r = GUILayoutUtility.GetLastRect ();
 
-			Texture2D texture = tile.IsValid ? TextureFromSprite (tile.sprite) : new Texture2D (16, 16);
+			Texture2D texture = tile.IsValid ? tile.sprite.ToTexture2D() : new Texture2D (16, 16);
 			GUI.DrawTexture (r, texture);
 			GUI.color = Color.white;
 
@@ -56,19 +58,6 @@ namespace toinfiniityandbeyond.Tilemapping
 			{
 				EditorUtility.SetDirty (this);
 			}
-		}
-		private Texture2D TextureFromSprite (Sprite sprite)
-		{
-			var texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			var pixels = sprite.texture.GetPixels ((int)sprite.textureRect.x,
-													(int)sprite.textureRect.y,
-													(int)sprite.textureRect.width,
-													(int)sprite.textureRect.height);
-			texture.SetPixels (pixels);
-			texture.filterMode = sprite.texture.filterMode;
-			texture.wrapMode = sprite.texture.wrapMode;
-			texture.Apply ();
-			return texture;
 		}
 	}
 }

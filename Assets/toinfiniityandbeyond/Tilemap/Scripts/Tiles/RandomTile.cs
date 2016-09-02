@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 	
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -6,10 +7,8 @@ namespace toinfiniityandbeyond.Tilemapping
 	[CreateAssetMenu (fileName = "New RandomTile", menuName = "Tilemap/Tiles/RandomTile")]
 	public class RandomTile : ScriptableTile
 	{
-		[SerializeField]
-		private int seed = 0;
-		[SerializeField]
-		private Sprite[] sprites;
+		public int globalSeed = 0;
+		public List<Sprite> sprites;
 
 		//Returns if this tile is okay to be used in the tile map
 		//For example: if this tile doesn't have a Read/Write enabled sprite it will return false
@@ -17,7 +16,7 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			get
 			{
-				if(sprites == null || sprites.Length == 0)
+				if(sprites == null || sprites.Count == 0)
 					return false;
 				
 				try
@@ -34,9 +33,12 @@ namespace toinfiniityandbeyond.Tilemapping
 		
 		public override Sprite GetSprite (TileMap tilemap, Point position = default (Point))
 		{
+			//Get a unique seed based on position
 			int positionSeed = position.x >= position.y ? position.x * position.x + position.x + position.y : position.x + position.y * position.y;
-			System.Random prng = new System.Random (seed + positionSeed);
-			int index = prng.Next (0, sprites.Length);
+			//Use it alongside the global seed
+			System.Random prng = new System.Random (globalSeed + positionSeed);
+			//Get a pseudo random index based on position
+			int index = prng.Next (0, sprites.Count);
 			return sprites[index];
 		}
 		public override Texture2D GetIcon ()
