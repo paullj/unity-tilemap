@@ -22,13 +22,16 @@ This tilemap system is a robust system that allows users to customise the tile t
 		*  Fill
 		*  Eraser
 		*  Eyedropper
-	* Proper Undo/Redo  
+		*  Line
+		*  Rectangle
+		*  Ellipse
+	* Proper Undo/Redo ([@nickgirardo](https://github.com/nickgirardo))
 	* **TODO:** Export/Import to JSON or ScriptableObject
 * Different rendering modes
-	* Sprites
-	* **TODO:** Single Quad
-	* **TODO:** Multiple Quads
-	* **TODO:** Chunked Quads
+	* Single Sprites
+	* Multiple Quads
+	* **TODO:** Single Quad - Uses a single quad and creates a custom texture
+	* **TODO:** Chunked Quads - Uses a grid of Multiple Quads ?
 * **TODO:** Infinite or limited tilemap size (only available on chunked quads?)
 * **TODO:** Colliders
 * **TODO:** Layers

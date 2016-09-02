@@ -1,24 +1,21 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-using System;
-using System.Reflection;
-
-namespace toinfiniityandbeyond.UI
+namespace toinfiniityandbeyond.Utillity
 {
-	public static class CustomGUILayout
+	public static class MyGUILayout
 	{
 		private static readonly Color splitterColor = EditorGUIUtility.isProSkin ? new Color (0.157f, 0.157f, 0.157f) : new Color (0.5f, 0.5f, 0.5f);
 
 		public static void Splitter (Color rgb, float thickness = 1)
 		{
-			Rect position = GUILayoutUtility.GetRect (GUIContent.none, CustomStyles.splitter, GUILayout.Height (thickness));
+			Rect position = GUILayoutUtility.GetRect (GUIContent.none, MyStyles.splitter, GUILayout.Height (thickness));
 
 			if (Event.current.type == EventType.Repaint)
 			{
 				Color restoreColor = UnityEngine.GUI.color;
 				GUI.color = rgb;
-				CustomStyles.splitter.Draw (position, false, false, false, false);
+				MyStyles.splitter.Draw (position, false, false, false, false);
 				GUI.color = restoreColor;
 			}
 		}
@@ -38,7 +35,7 @@ namespace toinfiniityandbeyond.UI
 
 		public static void Splitter (float thickness = 1)
 		{
-			Splitter (thickness, CustomStyles.splitter);
+			Splitter (thickness, MyStyles.splitter);
 		}
 		public static void Link (string text, string URL, params GUILayoutOption [] options)
 		{
@@ -71,7 +68,7 @@ namespace toinfiniityandbeyond.UI
 		}
 	}
 
-	public static class CustomGUI { 
+	public static class MyGUI { 
 		private static readonly Color splitterColor = EditorGUIUtility.isProSkin ? new Color (0.157f, 0.157f, 0.157f) : new Color (0.5f, 0.5f, 0.5f);
 		// GUI Style
 		public static void Splitter (Rect position)
@@ -80,14 +77,14 @@ namespace toinfiniityandbeyond.UI
 			{
 				Color restoreColor = UnityEngine.GUI.color;
 				UnityEngine.GUI.color = splitterColor;
-				CustomStyles.splitter.Draw (position, false, false, false, false);
+				MyStyles.splitter.Draw (position, false, false, false, false);
 				UnityEngine.GUI.color = restoreColor;
 			}
 		}
 	
 	}
 
-	public static class CustomStyles
+	public static class MyStyles
 	{
 		public static readonly GUIStyle splitter;
 		public static readonly GUIStyle wrappedLabel;
@@ -98,7 +95,7 @@ namespace toinfiniityandbeyond.UI
 		public static readonly GUIStyle centerWhiteBoldLabel;
 		public static readonly GUIStyle centerWhiteMiniLabel;
 
-		static CustomStyles ()
+		static MyStyles ()
 		{
 			splitter = new GUIStyle ();
 			splitter.normal.background = EditorGUIUtility.whiteTexture;

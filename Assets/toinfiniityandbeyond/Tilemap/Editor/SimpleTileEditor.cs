@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using toinfiniityandbeyond.UI;
+using toinfiniityandbeyond.Utillity;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
@@ -17,14 +17,14 @@ namespace toinfiniityandbeyond.Tilemapping
 		{
 			GUILayout.Space (10);
 
-			GUILayout.Label ("Sprite:", CustomStyles.leftBoldLabel);
+			GUILayout.Label ("Sprite:", MyStyles.leftBoldLabel);
 
 			float width = EditorGUIUtility.labelWidth;
 			if (!tile.IsValid)
 			{
 				GUI.color = new Color (1, 0.5f, 0.5f);
 			}
-			if (GUILayout.Button (GUIContent.none, CustomStyles.centerWhiteBoldLabel, GUILayout.Width (width), GUILayout.Height (width)))
+			if (GUILayout.Button (GUIContent.none, MyStyles.centerWhiteBoldLabel, GUILayout.Width (width), GUILayout.Height (width)))
 			{
 				EditorGUIUtility.ShowObjectPicker<Sprite> (tile.sprite, false, "", 0);
 			}
@@ -34,7 +34,7 @@ namespace toinfiniityandbeyond.Tilemapping
 			GUI.DrawTexture (r, texture);
 			GUI.color = Color.white;
 
-			GUIStyle labelStyle = new GUIStyle (CustomStyles.centerWhiteBoldLabel);
+			GUIStyle labelStyle = new GUIStyle (MyStyles.centerWhiteBoldLabel);
 			if (!tile.sprite)
 				GUI.Label (r, "Tile not valid!\nSprite cannot be left empty", labelStyle);
 			else if (!tile.IsValid)

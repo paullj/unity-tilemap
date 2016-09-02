@@ -52,7 +52,7 @@ namespace toinfiniityandbeyond.Tilemapping
         public void PushChanges(List<ChangeElement> change)
         {
             //Any tiles changed?
-            if (change.Count == 0)
+            if (change == null || change.Count == 0)
                 return;
 
             //Are we at the newest revision?

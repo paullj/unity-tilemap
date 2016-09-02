@@ -13,14 +13,14 @@ namespace toinfiniityandbeyond.Tilemapping
 		SerializedProperty spSortingLayer;
 		SerializedProperty spOrderInLayer;
 
-		private void OnEnable() {
+		public virtual void OnEnable() {
 			spColor = serializedObject.FindProperty("color");
 			spMaterial = serializedObject.FindProperty("material");
 			spSortingLayer = serializedObject.FindProperty("sortingLayer");
 			spOrderInLayer = serializedObject.FindProperty("orderInLayer");
 		}
 
-		private void OnDisable() {
+		public virtual void OnDisable() {
 
 		}
 

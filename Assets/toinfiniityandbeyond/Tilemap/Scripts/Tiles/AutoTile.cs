@@ -7,16 +7,9 @@ namespace toinfiniityandbeyond.Tilemapping
 	public class AutoTile : ScriptableTile
 	{
 		public Sprite [] bitmaskSprites = new Sprite[16];
-		public bool defaultIsFull = true;
-
-		private Texture2D texture;
-		private Color [] colors;
-
-		//Called when the inspector has been edited
-		private void OnValidate ()
-		{
-			RebuildTexture ();
-		}
+		public enum AutoTileMode { Everything, SameTile, None}
+		public AutoTileMode mode;
+		public bool edgesAreFull = false;
 		
 		//Returns if this tile is okay to be used in the tile map
 		//For example: if this tile doesn't have a Read/Write enabled sprite it will return false
@@ -60,28 +53,30 @@ namespace toinfiniityandbeyond.Tilemapping
 			if (tilemap == null)
 				return bitmaskSprites[15];
 
-			ScriptableTile left = tilemap.GetTileAt (position.Left);
-			ScriptableTile up = tilemap.GetTileAt (position.Up);
-			ScriptableTile right = tilemap.GetTileAt (position.Right);
-			ScriptableTile down = tilemap.GetTileAt (position.Down);
+			ScriptableTile[] tiles = new ScriptableTile[] {
+				tilemap.GetTileAt (position.Up),
+				tilemap.GetTileAt (position.Left),
+				tilemap.GetTileAt (position.Down),
+				tilemap.GetTileAt (position.Right),
+			};
+			int[] bitmasks = new int[] {
+				1, 2, 4, 8
+			};
+			Point[] points = new Point[] {
+				position.Up,
+				position.Left,
+				position.Down,
+				position.Right,
+			};
 
 			int index = 0;
-
-			if ((!tilemap.IsInBounds (position.Up) && defaultIsFull) || (up && up.ID == this.ID))
-			{
-				index += 1;
-			}
-			if ((!tilemap.IsInBounds (position.Right) && defaultIsFull) || (right && right.ID == this.ID))
-			{
-				index += 8;
-			}
-			if ((!tilemap.IsInBounds (position.Down) && defaultIsFull) || (down && down.ID == this.ID))
-			{
-				index += 4;
-			}
-			if ((!tilemap.IsInBounds (position.Left) && defaultIsFull) || (left && left.ID == this.ID))
-			{
-				index += 2;
+			for(int i = 0; i < 4; i++) {
+				bool exists = tiles[i] != null;
+				bool isSame = exists && tiles[i].ID == this.ID;
+				bool isEdge = !tilemap.IsInBounds (points[i]);
+				
+				if((isEdge && edgesAreFull) || (exists && mode == AutoTileMode.Everything) || (exists && (mode == AutoTileMode.SameTile && isSame)))
+					index += bitmasks[i];
 			}
 
 			if (index < bitmaskSprites.Length && bitmaskSprites [index])
@@ -89,33 +84,10 @@ namespace toinfiniityandbeyond.Tilemapping
 
 			return bitmaskSprites [15];
 		}
-		public override Texture2D GetTexture (TileMap tilemap = null, Point position = default (Point))
+		public override Texture2D GetIcon ()
 		{
-			if (texture == null)
-				RebuildTexture ();
-			return texture;
-		}
-		public override Color [] GetColors (TileMap tilemap = null, Point position = default (Point))
-		{
-			if (colors.Length == 0)
-				RebuildTexture ();
-			return colors;
-		}
-		
-		public void RebuildTexture ()
-		{
-			if (!IsValid)
-				return;
-			Sprite sprite = bitmaskSprites [15];
-			texture = new Texture2D ((int)sprite.rect.width, (int)sprite.rect.height, sprite.texture.format, false);
-			colors = sprite.texture.GetPixels ((int)sprite.textureRect.x,
-												(int)sprite.textureRect.y,
-												(int)sprite.textureRect.width,
-												(int)sprite.textureRect.height);
-			texture.SetPixels (colors);
-			texture.filterMode = sprite.texture.filterMode;
-			texture.wrapMode = sprite.texture.wrapMode;
-			texture.Apply ();
+			if (!IsValid) return null;
+			return bitmaskSprites[15].ToTexture2D();
 		}
 	}
 }
