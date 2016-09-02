@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace toinfiniityandbeyond.Tilemapping
 {
-    //Remember to change these names to something more meaningful!
-    [CreateAssetMenu(fileName = "AnimatedTile", menuName = "Tilemap/Tiles/AnimatedTile")]
+    //[CreateAssetMenu(fileName = "AnimatedTile", menuName = "Tilemap/Tiles/AnimatedTile")]
     public class AnimatedTile : ScriptableTile
     {
         [System.Serializable]
