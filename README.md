@@ -2,9 +2,13 @@
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Features](#features)    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Things I Would Like](#like)    
 [Help](#help)    
 [Contributing](#contributing)    
 [Contact](#contact)
+
+![alt tag](https://github.com/toinfiniityandbeyond/unity-tilemap/blob/master/images/banner.gif)
 
 ## About
 This tilemap system is a robust system that allows users to customise the tile types and brushes to enable them to be able to easily paint tiles in the Unity Editor as well as in realtime.
@@ -30,9 +34,9 @@ This tilemap system is a robust system that allows users to customise the tile t
 * Different rendering modes
 	* Single Sprites
 	* Multiple Quads
-* **TODO:** Colliders
+* **TODO:** TileMapCollider2D (Use PolygonCollider2D underneath)
 
-### Things I would like (But have been put on the back burner)
+### Things I Would Like (But have been put on the back burner)<a name="like"></a>
 * Good documentation
 * More rendering modes
 	* Single Quad
@@ -52,11 +56,11 @@ If you want to create your own scriptable tiles (Like the **RandomTile** or **Au
 Yes. If you want to create your own tools (Like the **Pencil** or **Eyedropper**) then click on _Create > Tilemap > Create C# Tool Script_ and edit like anyother script. Since all tools (even the included ones) inherit from **ScriptableTool** you can also simply create a C# class that inherits from **ScriptableTool**. Any class that inherits **ScriptableTool** will automatically be able to use in the Edit Mode tile editor, any public variables will also be exposed in the tile editor toolbar.
 
 ## Contributing
-Feel free to contribute, I will accept pull requests if I think it will benefit the tool. If you have any questions contact me (details below).
+Feel free to contribute, I will accept pull requests if I think it will benefit the tool. If you want to help but are not sure with what have a look at the **TODOs** as well as the **Things I Would Like** sections for ideas. If you have any questions contact me (details below).
 
 Special thanks to the following for their contribution:
 * [@nickgirardo](https://github.com/nickgirardo)
 
 ## Contact
-If you would like to contact me please do so over twitter :)    
+If you would like to contact me please do so over twitter below or through github directly :)    
 [@toinfiniityandb](https://www.twitter.com/toinfiniityandb)
