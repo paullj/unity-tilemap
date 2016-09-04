@@ -39,9 +39,9 @@ namespace toinfiniityandbeyond.Tilemapping
 			}
 		}
 		private void OnEnterEditMode() {
-			SceneView currentView = SceneView.lastActiveSceneView;
-			currentView.pivot = tileMap.tileMapPosition + new Vector3 (tileMap.Width / 2, tileMap.Height / 2, -10);
-			currentView.size = tileMap.Height + 2;
+		//	SceneView currentView = SceneView.lastActiveSceneView;
+		//	currentView.pivot = tileMap.tileMapPosition + new Vector3 (tileMap.Width / 2, tileMap.Height / 2, -10);
+		//	currentView.size = tileMap.Height + 2;
 
 			Tools.hidden = true;
 			Tools.current = Tool.None;
@@ -545,15 +545,16 @@ namespace toinfiniityandbeyond.Tilemapping
 					List<Point> region = tileMap.scriptableToolCache [tileMap.selectedScriptableTool].GetRegion (point, tileMap.primaryTile, tileMap);
 					GUIStyle style = new GUIStyle(MyStyles.centerWhiteBoldLabel);
 					style.normal.textColor = Handles.color;
-					Handles.Label((Vector2)position + (Vector2)point, point.ToString(), style);
+					Point cursorPoint = point + new Point(tileMap.transform.position);
+					Handles.Label((Vector2)cursorPoint, point.ToString(), style);
 					
 					for(int i = 0; i < region.Count; i++)
 					{
-						Handles.color = tileMap.IsInBounds(region[i]) ?  new Color (0.5f, 1, 0.5f) : new Color (1, 0.5f, 0.5f);
-						Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
 						point = region[i];
-						Vector2 tilePosition = (Vector2)position + (Vector2)point;
-						Handles.CubeCap (0, tilePosition + Vector2.one * 0.5f, Quaternion.identity, 1f);
+						cursorPoint = point + new Point(tileMap.transform.position);
+						Handles.color = tileMap.IsInBounds(point) ?  new Color (0.5f, 1, 0.5f) : new Color (1, 0.5f, 0.5f);
+						Handles.color = new Color (Handles.color.r, Handles.color.g, Handles.color.b, 0.3f);
+						Handles.CubeCap (0, (Vector2)cursorPoint + Vector2.one * 0.5f, Quaternion.identity, 1f);
 					}
 				}
 			}

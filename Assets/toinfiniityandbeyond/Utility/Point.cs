@@ -14,6 +14,21 @@ public struct Point
 	public int x;
 	public int y;
 
+	public Point (Vector2 v)
+	{
+		this.x = Mathf.RoundToInt(v.x);
+		this.y = Mathf.RoundToInt(v.y);
+	}
+	public Point (Vector3 v)
+	{
+		this.x = Mathf.RoundToInt(v.x);
+		this.y = Mathf.RoundToInt(v.y);
+	}
+	public Point (Point p)
+	{
+		this.x = p.x;
+		this.y = p.y;
+	}
 	public Point (int x, int y)
 	{
 		this.x = x;
