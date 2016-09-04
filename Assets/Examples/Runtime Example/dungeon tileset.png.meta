@@ -1,0 +1,239 @@
+fileFormatVersion: 2
+guid: d83e2b6d203c5154c8dadc2257a42e21
+timeCreated: 1472986149
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: floor
+    21300002: soundsheett_vFinal (1)_1
+    21300004: soundsheett_vFinal (1)_2
+    21300006: soundsheett_vFinal (1)_3
+    21300008: empty space
+    21300010: wall
+    21300012: soundsheett_vFinal (1)_6
+    21300014: soundsheett_vFinal (1)_7
+    21300016: soundsheett_vFinal (1)_8
+    21300018: soundsheett_vFinal (1)_9
+    21300020: wall1
+    21300022: soundsheett_vFinal (1)_11
+    21300024: soundsheett_vFinal (1)_12
+    21300026: soundsheett_vFinal (1)_13
+    21300028: soundsheett_vFinal (1)_14
+    21300030: soundsheett_vFinal (1)_15
+    21300032: soundsheett_vFinal (1)_16
+    21300034: soundsheett_vFinal (1)_17
+    21300036: soundsheett_vFinal (1)_18
+    21300038: soundsheett_vFinal (1)_19
+    21300040: soundsheett_vFinal (1)_20
+    21300042: soundsheett_vFinal (1)_21
+    21300044: soundsheett_vFinal (1)_22
+    21300046: soundsheett_vFinal (1)_23
+    21300048: soundsheett_vFinal (1)_24
+    21300050: soundsheett_vFinal (1)_25
+    21300052: soundsheett_vFinal (1)_26
+    21300054: soundsheett_vFinal (1)_27
+    21300056: soundsheett_vFinal (1)_28
+    21300058: soundsheett_vFinal (1)_29
+    21300060: soundsheett_vFinal (1)_30
+    21300062: soundsheett_vFinal (1)_31
+    21300064: soundsheett_vFinal (1)_32
+    21300066: soundsheett_vFinal (1)_33
+    21300068: soundsheett_vFinal (1)_34
+    21300070: soundsheett_vFinal (1)_35
+    21300072: soundsheett_vFinal (1)_36
+    21300074: soundsheett_vFinal (1)_37
+    21300076: soundsheett_vFinal (1)_38
+    21300078: soundsheett_vFinal (1)_39
+    21300080: soundsheett_vFinal (1)_40
+    21300082: soundsheett_vFinal (1)_41
+    21300084: soundsheett_vFinal (1)_42
+    21300086: soundsheett_vFinal (1)_43
+    21300088: soundsheett_vFinal (1)_44
+    21300090: soundsheett_vFinal (1)_45
+    21300092: soundsheett_vFinal (1)_46
+    21300094: soundsheett_vFinal (1)_47
+    21300096: soundsheett_vFinal (1)_48
+    21300098: soundsheett_vFinal (1)_49
+    21300100: soundsheett_vFinal (1)_50
+    21300102: soundsheett_vFinal (1)_51
+    21300104: soundsheett_vFinal (1)_52
+    21300106: soundsheett_vFinal (1)_53
+    21300108: soundsheett_vFinal (1)_54
+    21300110: soundsheett_vFinal (1)_55
+    21300112: soundsheett_vFinal (1)_56
+    21300114: soundsheett_vFinal (1)_57
+    21300116: soundsheett_vFinal (1)_58
+    21300118: soundsheett_vFinal (1)_59
+    21300120: soundsheett_vFinal (1)_60
+    21300122: soundsheett_vFinal (1)_61
+    21300124: soundsheett_vFinal (1)_62
+    21300126: soundsheett_vFinal (1)_63
+    21300128: soundsheett_vFinal (1)_64
+    21300130: soundsheett_vFinal (1)_65
+    21300132: soundsheett_vFinal (1)_66
+    21300134: soundsheett_vFinal (1)_67
+    21300136: soundsheett_vFinal (1)_68
+    21300138: soundsheett_vFinal (1)_69
+    21300140: soundsheett_vFinal (1)_70
+    21300142: soundsheett_vFinal (1)_71
+    21300144: soundsheett_vFinal (1)_72
+    21300146: soundsheett_vFinal (1)_73
+    21300148: soundsheett_vFinal (1)_74
+    21300150: soundsheett_vFinal (1)_75
+    21300152: soundsheett_vFinal (1)_76
+    21300154: soundsheett_vFinal (1)_77
+    21300156: soundsheett_vFinal (1)_78
+    21300158: soundsheett_vFinal (1)_79
+    21300160: soundsheett_vFinal (1)_80
+    21300162: soundsheett_vFinal (1)_81
+    21300164: soundsheett_vFinal (1)_82
+    21300166: soundsheett_vFinal (1)_83
+    21300168: soundsheett_vFinal (1)_84
+    21300170: soundsheett_vFinal (1)_85
+    21300172: soundsheett_vFinal (1)_86
+    21300174: soundsheett_vFinal (1)_87
+    21300176: soundsheett_vFinal (1)_88
+    21300178: soundsheett_vFinal (1)_89
+    21300180: soundsheett_vFinal (1)_90
+    21300182: soundsheett_vFinal (1)_91
+    21300184: soundsheett_vFinal (1)_92
+    21300186: soundsheett_vFinal (1)_93
+    21300188: soundsheett_vFinal (1)_94
+    21300190: soundsheett_vFinal (1)_95
+    21300192: soundsheett_vFinal (1)_96
+    21300194: soundsheett_vFinal (1)_97
+    21300196: soundsheett_vFinal (1)_98
+    21300198: soundsheett_vFinal (1)_99
+    21300200: soundsheett_vFinal (1)_100
+    21300202: soundsheett_vFinal (1)_101
+    21300204: soundsheett_vFinal (1)_102
+    21300206: soundsheett_vFinal (1)_103
+    21300208: soundsheett_vFinal (1)_104
+    21300210: soundsheett_vFinal (1)_105
+    21300212: soundsheett_vFinal (1)_106
+    21300214: soundsheett_vFinal (1)_107
+    21300216: soundsheett_vFinal (1)_108
+    21300218: soundsheett_vFinal (1)_109
+    21300220: soundsheett_vFinal (1)_110
+    21300222: soundsheett_vFinal (1)_111
+    21300224: soundsheett_vFinal (1)_112
+    21300226: soundsheett_vFinal (1)_113
+    21300228: soundsheett_vFinal (1)_114
+    21300230: soundsheett_vFinal (1)_115
+    21300232: soundsheett_vFinal (1)_116
+    21300234: soundsheett_vFinal (1)_117
+    21300236: soundsheett_vFinal (1)_118
+    21300238: soundsheett_vFinal (1)_119
+    21300240: soundsheett_vFinal (1)_120
+    21300242: soundsheett_vFinal (1)_121
+    21300244: soundsheett_vFinal (1)_122
+    21300246: soundsheett_vFinal (1)_123
+    21300248: soundsheett_vFinal (1)_124
+    21300250: soundsheett_vFinal (1)_125
+    21300252: soundsheett_vFinal (1)_126
+    21300254: soundsheett_vFinal (1)_127
+    21300256: soundsheett_vFinal (1)_128
+    21300258: soundsheett_vFinal (1)_129
+    21300260: soundsheett_vFinal (1)_130
+    21300262: soundsheett_vFinal (1)_131
+    21300264: soundsheett_vFinal (1)_132
+    21300266: soundsheett_vFinal (1)_133
+    21300268: soundsheett_vFinal (1)_134
+    21300270: soundsheett_vFinal (1)_135
+    21300272: soundsheett_vFinal (1)_136
+    21300274: soundsheett_vFinal (1)_137
+    21300276: Wall Full
+    21300278: Wall
+    21300280: Floor
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 1
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 256
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 0
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 8
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 5
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Wall Full
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 176
+        width: 8
+        height: 8
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Wall
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 168
+        width: 8
+        height: 8
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Floor
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 176
+        width: 8
+        height: 8
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

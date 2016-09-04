@@ -26,12 +26,17 @@ namespace toinfiniityandbeyond.Tilemapping
             {
                 current = new GameObject(string.Format("[{0}, {1}]", x, y)).AddComponent<SpriteRenderer>();
                 current.transform.SetParent(parent);
-                current.transform.localPosition = new Vector2(x, y);
-                current.transform.localScale = Vector2.one;
 
                 spriteMap[index] = current;
             }
             ScriptableTile tile = tileMap.GetTileAt(x, y);
+            current.sprite = tile ? tile.GetSprite(tileMap, new Point(x, y)) : null;
+
+            current.transform.localPosition = new Vector2(x, y) + (tile ?
+                new Vector2(current.sprite.pivot.x / current.sprite.rect.width, 
+                current.sprite.pivot.y / current.sprite.rect.height) : Vector2.zero);
+
+            current.transform.localScale = Vector2.one;
             current.sharedMaterial = material;
             current.color = color;
             current.sortingLayerID = sortingLayer;
@@ -39,7 +44,6 @@ namespace toinfiniityandbeyond.Tilemapping
 
             current.gameObject.SetActive(tile != null);
 
-            current.sprite = tile ? tile.GetSprite(tileMap, new Point(x, y)) : null;
         }
     }
 }
