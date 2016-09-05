@@ -1,4 +1,6 @@
 # Unity Tilemap
+
+[![Join the chat at https://gitter.im/unity-tilemap/Lobby](https://badges.gitter.im/unity-tilemap/Lobby.svg)](https://gitter.im/unity-tilemap/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
 [About](#about)    
