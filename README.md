@@ -64,6 +64,7 @@ Feel free to contribute, I will accept pull requests if I think it will benefit 
 
 Special thanks to the following for their contribution:
 * [@nickgirardo](https://github.com/nickgirardo)
+* [@Hammster](https://github.com/Hammster)
 
 ## Contact
 If you would like to contact me please do so over twitter below or through github directly :)    
