@@ -35,6 +35,21 @@ This tilemap system is a robust system that allows users to customise the tile t
 		*  Ellipse
 	* Proper Undo/Redo ([@nickgirardo](https://github.com/nickgirardo))
 	* Export/Import to ScriptableObject
+* Access the tilemap through a clean API
+
+	``` c#
+	//Get tiles by using
+	GetTileAt(Vector2 worldPosition);
+	GetTileAt(int x, int y);
+	//Set tiles by using
+	SetTileAt(int x, int y, ScriptableTile to);
+	//Invoke a callback to update tiles
+	UpdateTileAt(int x, int y);
+	UpdateTiles();
+	UpdateNeighbours(int x, int y);
+	UpdateType(ScriptableTile type);
+	[... and more]
+	```
 * Different rendering modes
 	* Single Sprites
 	* Multiple Quads
