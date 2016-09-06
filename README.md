@@ -1,8 +1,7 @@
 # Unity Tilemap
 
 ![Tested on Unity 5.4.0f3](https://img.shields.io/badge/Tested%20on%20unity-5.4.0f3-blue.svg?style=flat-square)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![Gitter](https://badges.gitter.im/unity-tilemap/Lobby.svg)](https://gitter.im/unity-tilemap/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
+[![Gitter](https://img.shields.io/badge/chat-on%20gitter-green.svg?style=flat-square)](https://gitter.im/unity-tilemap/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A simple yet highly customisable tile mapping tool made for the Unity Engine.
 
