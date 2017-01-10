@@ -8,8 +8,8 @@ public struct Point
 
 	public static Point north = new Point (0, 1);
 	public static Point south = new Point (0, -1);
-	public static Point west = new Point (1, 0);
-	public static Point east = new Point (-1, 0);
+	public static Point west = new Point (-1, 0);
+	public static Point east = new Point (1, 0);
 
 	public int x;
 	public int y;
